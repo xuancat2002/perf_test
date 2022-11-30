@@ -165,7 +165,7 @@ def stop_perf(host):
     exec_cmd("ssh root@{} killall mpstat pcm-pcie pmt".format(host))
 
 workloads={
-    'v_baidu':     ['docker_video.sh','load_video2.sh'],
+    'v_baidu':     ['loop_docker.sh', 'docker_video.sh','load_video2.sh'],
     'v_transcode': ['docker_video.sh','load_video.sh'],
     'a_resnet50':  ['docker_resnet50.sh'],
     'a_bert':      ['docker_bert.sh','load_bert.sh'],
@@ -221,22 +221,20 @@ docker exec card$IDX bash -c "source /etc/profile && sh $DIR/load_video.sh 1"
 
     with open(folder+'/'+script_file, 'w') as f:
         f.write(content)
-def start_dockers(host,mode,path,index,local_dir,case):
+def start_dockers(host,mode,path,local_dir,case):
     # scp docker_ai.sh to host:path
     for script in workloads[mode]:
         send_file_remote('root', host, local_dir+script, path)
     #send_file_remote('root', host, folder+"vastai_pci.ko", path)  # already installed
-    opt="{} {}".format(index, case)
-    run_script_remote('root', host, path, workloads[mode][0], opt)
+    run_script_remote('root', host, path, workloads[mode][0], case)
 def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     #folder = '/Users/xuan/Desktop/VA1V/script_latest/'  # local
     folder = 'va1v_BD/script/'  # local
-    index=0
-    #card="va1v_ai_bert{}".format(index+1)
-    card="va1v_{}_{}".format(case,index+1)
+    #card="va1v_ai_bert{}".format(1)
+    card="va1v4_{}".format(case)
     start_perf(host,path1,card,folder)
-    start_dockers(host,name,path1,index,folder,case)  # card0
+    start_dockers(host,name,path1,folder,case)  # card0
     time.sleep(5)
     #wait_for_pid_finish(workloads[name])
     stop_perf(host)
