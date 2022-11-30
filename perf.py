@@ -157,13 +157,13 @@ pcm-pcie     -B  -csv={DIR}/pcie.csv > /dev/null 2>&1 &""".format(DIR=folder)
         #print(content)
     with open(folder+'/'+script_file, 'w') as f:
         f.write(content)
-def start_perf(host,work_dir,card_name,local_dir):
+def start_perf(host,work_dir,case_name,local_dir):
     #result_folder= "/home/test"
     perf_file="start_perf.sh"
     #work_folder=work_dir+'/'+sub_folder
     send_file_remote('root', host, local_dir+perf_file, work_dir)
     #write_perf_file(work_folder, perf_file, ['mpstat','mem','pcie'])
-    run_script_remote('root', host, work_dir, perf_file, card_name, False)
+    run_script_remote('root', host, work_dir, perf_file, case_name, False)
 def stop_perf(host):
     exec_cmd("ssh root@{} killall mpstat pcm-pcie pmt".format(host))
 
@@ -234,15 +234,14 @@ def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     #folder = '/Users/xuan/Desktop/VA1V/script_latest/'  # local
     folder = 'script/'  # local
-    #card="va1v_ai_bert{}".format(1)
-    card="{}_{}".format(name,case)
-    start_perf(host,path1,card,folder)
-    start_dockers(host,name,path1,folder,case)  # card0
+    full="{}_{}".format(name,case)
+    start_perf(host,path1,full,folder)
+    start_dockers(host,name,path1,folder,case)
     time.sleep(5)
     #wait_for_pid_finish(workloads[name])
     stop_perf(host)
-    download_results('root', host, path1+'/logs/'+card, "results")
-    plot_metrics("results",card)
+    download_results('root', host, path1+'/logs/'+full, "results")
+    plot_metrics("results",full)
 
 test_and_monitor("192.168.20.209","v_baidu","1k")
 #test_and_monitor("192.168.20.209","v_transcode")
