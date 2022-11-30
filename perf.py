@@ -122,6 +122,7 @@ def plot_metrics(path,card):
     plot_mem_pmt(path,card)
     plot_cpu(path,card,'all')
     plot_cpu(path,card,'0')
+    exec_cmd("mv perf.log results/{}/".format(card))
     exec_cmd("rm -rf results/{}.tgz".format(card))
     exec_cmd("tar zcf results/{}.tgz results/{}".format(card,card))
 
