@@ -146,14 +146,14 @@ codec=$CODEC
 			keyint=120   # soft decode
 			ffmpeg -y -vsync 0 -i ${SOURCE_STREAM} -vaapi_device /dev/dri/${render} -vf 'format=yuv420p,hwupload' \
                -c:v ${codec}_vaapi -vframes ${frames} -an -b:v ${bitrate} \
-               -vast-params "tune=${tune}:lookaheadLength=${lookahead}:miniGopSize=${gopsize}:preset=${preset}_quality:keyint=${keyint}" \
+               -vast-params "tune=${tune}:lookaheadLength=${lookahead}:miniGopSize=${gopsize}:preset=${QUALITY}_quality:keyint=${keyint}" \
                "${out_dir}/${render}_${n}_output.${codec}" &
 		  elif [ "${DECODE}" = "hard" ]; then
 			keyint=60    # hard decode
 			# hard decode : -vsync 0 -noautorotate
 		    ffmpeg -y -hwaccel vaapi -hwaccel_output_format vaapi -hwaccel_device:v /dev/dri/${render} \
 		       -i ${SOURCE_STREAM} -r 30 -c:v ${codec}_vaapi -b:v ${bitrate} \
-		       -vast-params "tune=${tune}:vbvBufSize=$(($bitrate/1000)):vbvMaxRate=$(($bitrate*3/2500)):keyint=${keyint}:miniGopSize=${gopsize}:lookaheadLength=${lookahead}:intraQpOffset=${intraqpoffset}:preset=${preset}_quality" \
+		       -vast-params "tune=${tune}:vbvBufSize=$(($bitrate/1000)):vbvMaxRate=$(($bitrate*3/2500)):keyint=${keyint}:miniGopSize=${gopsize}:lookaheadLength=${lookahead}:intraQpOffset=${intraqpoffset}:preset=${QUALITY}_quality" \
 		       "${out_dir}/${render}_${n}_output.${codec}" &
 		  fi
    	    done    # device
