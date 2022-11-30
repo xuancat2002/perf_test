@@ -6,6 +6,8 @@ QUALITY=${2:-gold} # quality
 MODE=${3:-2pass}   # 1pass/2pass/IPPP
 DECODE=${4:-hard}  # soft/hard
 FAST=${5:-normal}  # normal/fast
+#CODECS="hevc h264"
+CODECS="h264"
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 #echo "$SCRIPTPATH"
@@ -111,7 +113,6 @@ sleep 10
 tune=1
 intraqpoffset=-2
 #QUALITYS="gold silver"
-CODECS="hevc h264"
 renders=`ls /dev/dri | grep render`
 
 for codec in $CODECS; do
