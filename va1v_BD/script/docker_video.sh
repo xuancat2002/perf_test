@@ -22,15 +22,16 @@ echo "$NODE" > /sys/fs/cgroup/cpuset/numanode$NODE/cpuset.mems
 #echo "docker run --rm -it --entrypoint=$SH --name card$IDX  --cgroup-parent=numanode$NODE --privileged --runtime=vastai -e VASTAI_VISIBLE_DEVICES=$IDX -v ${host_dataset_path}:/opt/vastai/vaststream/samples/dataset   ${ImageID}"
 #DIR=/opt/vastai/vaststream/samples/dataset/
 DIR=/opt/vastai/vaststream/samples/
-mkdir -p ${host_dataset_path}/output
-rm -rf ${host_dataset_path}/output/*
+OUT=${host_dataset_path}/output$IDX
+mkdir -p ${OUT}
+rm -rf ${OUT}/*
 
 docker stop video_card${IDX}
 sleep 2
 docker run --rm -itd --name video_card${IDX}  \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
-  -v ${host_dataset_path}/output:${DIR}/output \
+  -v ${OUT}/output:${DIR}/output \
   ${ImageID} /bin/bash
 sleep 5
 
