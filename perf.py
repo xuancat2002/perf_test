@@ -1,4 +1,6 @@
 ############################################
+# apt install python3.8 python3.8-dev
+# python3.8 -m pip install cython numpy pandas
 # python3 -m pip install pandas plotly -i https://pypi.tuna.tsinghua.edu.cn/simple
 # yum install cmake
 # git clone --recursive https://github.com/intel/pcm
@@ -160,7 +162,7 @@ def start_perf(host,work_dir,card_name,local_dir):
     #write_perf_file(work_folder, perf_file, ['mpstat','mem','pcie'])
     run_script_remote('root', host, work_dir, perf_file, card_name, False)
 def stop_perf(host):
-    exec_cmd("ssh root@{} killall mpstat pcm-memory pcm-pcie pmt".format(host))
+    exec_cmd("ssh root@{} killall mpstat pcm-pcie pmt".format(host))
 
 workloads={
     'v_baidu':     ['docker_video.sh','load_video2.sh'],
@@ -219,28 +221,29 @@ docker exec card$IDX bash -c "source /etc/profile && sh $DIR/load_video.sh 1"
 
     with open(folder+'/'+script_file, 'w') as f:
         f.write(content)
-def start_dockers(host,mode,path,index,local_dir):
+def start_dockers(host,mode,path,index,local_dir,case):
     # scp docker_ai.sh to host:path
     for script in workloads[mode]:
         send_file_remote('root', host, local_dir+script, path)
     #send_file_remote('root', host, folder+"vastai_pci.ko", path)  # already installed
-    run_script_remote('root', host, path, workloads[mode][0], index)
-def test_and_monitor(host,name):
+    opt="{} {}".format(index, case)
+    run_script_remote('root', host, path, workloads[mode][0], opt)
+def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     #folder = '/Users/xuan/Desktop/VA1V/script_latest/'  # local
     folder = 'va1v_BD/script/'  # local
     index=0
     #card="va1v_ai_bert{}".format(index+1)
-    card="va1v_video{}".format(index+1)
+    card="va1v_{}_{}".format(case,index+1)
     start_perf(host,path1,card,folder)
-    start_dockers(host,name,path1,index,folder)  # card0
+    start_dockers(host,name,path1,index,folder,case)  # card0
     time.sleep(5)
     #wait_for_pid_finish(workloads[name])
     stop_perf(host)
     download_results('root', host, path1+'/logs/'+card, folder)
     plot_metrics(folder,card)
 
-test_and_monitor("192.168.20.209","v_baidu")
+test_and_monitor("192.168.20.209","v_baidu","720")
 #test_and_monitor("192.168.20.209","v_transcode")
 #test_and_monitor("192.168.20.209","a_resnet50")
 #test_and_monitor("192.168.20.209","a_bert")
