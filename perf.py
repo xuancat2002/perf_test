@@ -239,9 +239,9 @@ def test_and_monitor(host,name,case):
     #wait_for_pid_finish(workloads[name])
     stop_perf(host)
     download_results('root', host, path1+'/logs/'+card, "results")
-    plot_metrics(folder,card)
+    plot_metrics("results",card)
 
-test_and_monitor("192.168.20.209","v_baidu","720")
+test_and_monitor("192.168.20.209","v_baidu","1k")
 #test_and_monitor("192.168.20.209","v_transcode")
 #test_and_monitor("192.168.20.209","a_resnet50")
 #test_and_monitor("192.168.20.209","a_bert")
