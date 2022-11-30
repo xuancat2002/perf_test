@@ -139,6 +139,7 @@ for codec in $CODECS; do
       done    # pid
       wait
 	  sleep 60
+	  rm -rf "${out_dir}/render*output.${codec}"
     #done    # loops
   #done    # quality
 done    # codec
