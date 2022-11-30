@@ -117,7 +117,7 @@ renders=`ls /dev/dri | grep render`
 for codec in $CODECS; do
   #for quality in $QUALITYS; do
 	echo "================ codec=$codec quality=$QUALITY nproc=$NPROC"
-    for i in $(seq $ITER); do    # loops
+    #for i in $(seq $ITER); do    # loops
       for n in $(seq $NPROC); do    # pid
         for render in $renders; do    # device
           # soft decode : 
@@ -139,7 +139,7 @@ for codec in $CODECS; do
       done    # pid
       wait
 	  sleep 60
-    done    # loops
+    #done    # loops
   #done    # quality
 done    # codec
 
