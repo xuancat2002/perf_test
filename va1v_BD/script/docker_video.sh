@@ -22,13 +22,15 @@ echo "$NODE" > /sys/fs/cgroup/cpuset/numanode$NODE/cpuset.mems
 #echo "docker run --rm -it --entrypoint=$SH --name card$IDX  --cgroup-parent=numanode$NODE --privileged --runtime=vastai -e VASTAI_VISIBLE_DEVICES=$IDX -v ${host_dataset_path}:/opt/vastai/vaststream/samples/dataset   ${ImageID}"
 #DIR=/opt/vastai/vaststream/samples/dataset/
 DIR=/opt/vastai/vaststream/samples/
-#-v ${host_dataset_path}:${DIR}
+mkdir -p ${host_dataset_path}/output
+rm -rf ${host_dataset_path}/output/*
 
 docker stop video_card${IDX}
 sleep 2
 docker run --rm -itd --name video_card${IDX}  \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
+  -v ${host_dataset_path}/output:${DIR}/output \
   ${ImageID} /bin/bash
 sleep 5
 
@@ -37,8 +39,6 @@ if [ $CASE -eq 0 ]; then
   docker cp $host_dataset_path/load_video.sh video_card${IDX}:$DIR
   docker exec video_card$IDX bash -c "source /etc/profile; sh $DIR/load_video.sh 1"
 else
-	
-
   declare -A VIDEOS=( 
     ["720"]="vidyo1_1280x720_30fps_5M_60400frames.mp4"
   	["1080"]="cdzi-hevc.mp4"  #1080p
@@ -49,12 +49,11 @@ else
   DIR=/opt/vastai/vaststream/samples/
   docker cp /data/video_data/${VIDEOS[$CASE]} video_card${IDX}:$DIR
   docker cp $host_dataset_path/load_video2.sh video_card${IDX}:$DIR
-  # video:  720/1080/1k/4k/8k
-  # proc:   52/24/24/4/2
-  # loop:   1
-  # test:   1pass/2pass/IPPP
-  # decode: soft/hard
-  # mode:   normal/fast
+  # video:    720/1080/1k/4k/8k
+  # quality:  gold/silver
+  # test:     1pass/2pass/IPPP
+  # decode:   soft/hard
+  # mode:     normal/fast
   docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE gold IPPP hard normal"
 fi
 
