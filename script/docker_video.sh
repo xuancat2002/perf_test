@@ -3,6 +3,12 @@
 
 IDX=${1:-0}
 CASE=${2:-1k}
+QUALITY=${3:-bronze}
+LATENCY=${4:-IPPP}
+DECODE=${5:-hard}
+SPEED=${6:-normal}
+CODEC=${7:-hevc}
+
 #File="ParkScene_1920x1080_30fps_8M.mp4"
 #URL="http://qa.vastai.com/datasets/$File"
 DR_NAME=`rpm -qa|grep vastai-pci`
@@ -52,11 +58,11 @@ else
   docker cp $host_dataset_path/load_video2.sh video_card${IDX}:$DIR
   # video:    720/1080/1k/4k/8k
   # quality:  gold/silver
-  # test:     1pass/2pass/IPPP
+  # latency:  1pass/2pass/IPPP
   # decode:   soft/hard
-  # mode:     normal/fast
+  # speed:    normal/fast
   # codec:    hevc/h264
-  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE bronze IPPP hard normal hevc"
+  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE $QUALITY $LATENCY $DECODE $SPEED $CODEC"
 fi
 
 #docker exec card$IDX bash -c 'source /etc/profile && sh /opt/vastai/vaststream/samples/script/video_press.sh'
