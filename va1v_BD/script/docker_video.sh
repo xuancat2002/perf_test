@@ -55,7 +55,7 @@ else
   # test:   1pass/2pass/IPPP
   # decode: soft/hard
   # mode:   normal/fast
-  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE 52 1 IPPP hard normal"
+  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE gold IPPP hard normal"
 fi
 
 #docker exec card$IDX bash -c 'source /etc/profile && sh /opt/vastai/vaststream/samples/script/video_press.sh'
