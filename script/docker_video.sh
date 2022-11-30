@@ -55,7 +55,8 @@ else
   # test:     1pass/2pass/IPPP
   # decode:   soft/hard
   # mode:     normal/fast
-  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE silver IPPP hard normal"
+  # codec:    hevc/h264
+  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE bronze IPPP hard normal hevc"
 fi
 
 #docker exec card$IDX bash -c 'source /etc/profile && sh /opt/vastai/vaststream/samples/script/video_press.sh'
