@@ -1,11 +1,11 @@
 #!/bin/bash
 
-CASE=${1:-1k}   # test case #
-NPROC=${2:-1}  # roads
-ITER=${3:-1}   # loops
-MODE=${4:-2pass}  # 1pass/2pass/IPPP
-DECODE=${5:-hard}  # soft/hard
-FAST=${6:-normal}   # normal/fast
+#ITER=${3:-1}       # loops
+CASE=${1:-1k}      # test case
+QUALITY=${2:-gold} # quality
+MODE=${3:-2pass}   # 1pass/2pass/IPPP
+DECODE=${4:-hard}  # soft/hard
+FAST=${5:-normal}  # normal/fast
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 #echo "$SCRIPTPATH"
@@ -68,6 +68,30 @@ elif [ "${MODE}" = "IPPP" ]; then
     gopsize=1
 fi
 
+declare -A PROCS=(
+  ["gold_IPPP_720"]=52
+  ["gold_IPPP_1080"]=24
+  ["gold_IPPP_1k"]=24
+  ["gold_IPPP_4k"]=4
+  ["gold_IPPP_8k"]=1
+  ["gold_2pass_720"]=36
+  ["gold_2pass_1080"]=20
+  ["gold_2pass_1k"]=20
+  ["gold_2pass_4k"]=4
+  ["gold_2pass_8k"]=1
+  ["silver_IPPP_720"]=68
+  ["silver_IPPP_1080"]=32
+  ["silver_IPPP_1k"]=32
+  ["silver_IPPP_4k"]=8
+  ["silver_IPPP_8k"]=1
+  ["silver_2pass_720"]=40
+  ["silver_2pass_1080"]=24
+  ["silver_2pass_1k"]=24
+  ["silver_2pass_4k"]=4
+  ["silver_2pass_8k"]=1
+)
+
+NPROC=${PROCS[${QUALITY}_${MODE}_${CASE}]}
 ###########################################################
 device_id=0
 #/opt/vastai/vaststream/tools/vasmi getvideomulticore -d ${device_id} -i 0,1    # get fast mode
@@ -86,13 +110,13 @@ sleep 10
 
 tune=1
 intraqpoffset=-2
-QUALITYS="gold silver"
+#QUALITYS="gold silver"
 CODECS="hevc h264"
 renders=`ls /dev/dri | grep render`
 
 for codec in $CODECS; do
-  for quality in $QUALITYS; do
-	echo "================ codec=$codec quality=$quality"
+  #for quality in $QUALITYS; do
+	echo "================ codec=$codec quality=$QUALITY nproc=$NPROC"
     for i in $(seq $ITER); do    # loops
       for n in $(seq $NPROC); do    # pid
         for render in $renders; do    # device
@@ -116,7 +140,7 @@ for codec in $CODECS; do
       wait
 	  sleep 60
     done    # loops
-  done    # quality
+  #done    # quality
 done    # codec
 
 ###########################################################################################################################################################
