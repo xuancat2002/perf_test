@@ -13,5 +13,5 @@ for i in $(seq 0 $INDEX); do
          ./docker_video.sh $i $CASE > video_card$i.$CASE.log 2>&1
   fi
   #./stop_perf.sh $i
-  sleep 88
+  sleep 1
 done
