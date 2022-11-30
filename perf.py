@@ -230,9 +230,9 @@ def start_dockers(host,mode,path,local_dir,case):
 def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     #folder = '/Users/xuan/Desktop/VA1V/script_latest/'  # local
-    folder = 'va1v_BD/script/'  # local
+    folder = 'script/'  # local
     #card="va1v_ai_bert{}".format(1)
-    card="va1v4_{}".format(case)
+    card="{}_{}".format(name,case)
     start_perf(host,path1,card,folder)
     start_dockers(host,name,path1,folder,case)  # card0
     time.sleep(5)

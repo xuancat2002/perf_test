@@ -1,0 +1,21 @@
+scp va1v_BD/script/start_perf.sh root@192.168.20.209:/home/test/dataset/
+
+ssh root@192.168.20.209 'cd /home/test/dataset/; ./start_perf.sh va1v4_4k' &
+
+scp va1v_BD/script/loop_docker.sh root@192.168.20.209:/home/test/dataset/
+
+scp va1v_BD/script/docker_video.sh root@192.168.20.209:/home/test/dataset/
+
+scp va1v_BD/script/load_video2.sh root@192.168.20.209:/home/test/dataset/
+
+ssh root@192.168.20.209 'cd /home/test/dataset/; ./loop_docker.sh 4k'
+Wed Nov 30 08:27:14 EST 2022
+video card0
+./docker_video.sh 0 4k > video_card0.4k.log 2>&1 &
+video card1
+./docker_video.sh 1 4k > video_card1.4k.log 2>&1 &
+video card2
+./docker_video.sh 2 4k > video_card2.4k.log 2>&1 &
+video card3
+./docker_video.sh 3 4k > video_card3.4k.log last
+scp -r root@192.168.20.209:/home/test/dataset//logs/va1v4_4k va1v_BD/script/ 
