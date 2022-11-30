@@ -243,7 +243,7 @@ def test_and_monitor(host,name,case):
     download_results('root', host, path1+'/logs/'+full, "results")
     plot_metrics("results",full)
 
-test_and_monitor("192.168.20.209","v_baidu","1k")
+test_and_monitor("192.168.20.209","v_baidu","720_bronze_IPPP_hard_normal_hevc")
 #test_and_monitor("192.168.20.209","v_transcode")
 #test_and_monitor("192.168.20.209","a_resnet50")
 #test_and_monitor("192.168.20.209","a_bert")
