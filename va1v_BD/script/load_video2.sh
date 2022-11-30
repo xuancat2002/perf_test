@@ -57,15 +57,15 @@ declare -A FRAMES_NORMAL=( # soft decode, normal mode
 if [ "${MODE}" = "1pass" ]; then
 	mode=1pass
     lookahead=0
-	minigopsize=0
+	gopsize=0
 elif [ "${MODE}" = "2pass" ]; then
 	mode=2pass
     lookahead=20
-    minigopsize=0
+    gopsize=0
 elif [ "${MODE}" = "IPPP" ]; then
 	mode=IPPP
     lookahead=0
-    minigopsize=1
+    gopsize=1
 fi
 
 ###########################################################
@@ -108,7 +108,7 @@ for codec in $CODECS; do
 			# hard decode : -vsync 0 -noautorotate
 		    ffmpeg -y -hwaccel vaapi -hwaccel_output_format vaapi -hwaccel_device:v /dev/dri/${render} \
 		       -i ${SOURCE_STREAM} -r 30 -c:v ${codec}_vaapi -b:v ${bitrate} \
-		       -vast-params "tune=${tune}:vbvBufSize=$(($bitrate/1000)):vbvMaxRate=$(($bitrate*3/2500)):keyint=${keyint}:miniGopSize=${minigopsize}:lookaheadLength=${lookahead}:intraQpOffset=${intraqpoffset}:preset=${preset}_quality" \
+		       -vast-params "tune=${tune}:vbvBufSize=$(($bitrate/1000)):vbvMaxRate=$(($bitrate*3/2500)):keyint=${keyint}:miniGopSize=${gopsize}:lookaheadLength=${lookahead}:intraQpOffset=${intraqpoffset}:preset=${preset}_quality" \
 		       "${out_dir}/${render}_${n}_output.${codec}" &
 		  fi
    	    done    # device
