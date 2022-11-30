@@ -1,13 +1,12 @@
 #!/bin/bash
 
-#ITER=${3:-1}       # loops
 CASE=${1:-1k}      # test case
 QUALITY=${2:-gold} # quality
 MODE=${3:-2pass}   # 1pass/2pass/IPPP
 DECODE=${4:-hard}  # soft/hard
 FAST=${5:-normal}  # normal/fast
-#CODECS="hevc h264"
-CODECS="h264"
+CODEC=${6:-hevc}   # hevc/h264
+#ITER=${7:-1}      # loops
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 #echo "$SCRIPTPATH"
@@ -71,29 +70,50 @@ elif [ "${MODE}" = "IPPP" ]; then
 fi
 
 declare -A PROCS=(
-  ["gold_IPPP_720"]=52
-  ["gold_IPPP_1080"]=24
-  ["gold_IPPP_1k"]=24
-  ["gold_IPPP_4k"]=4
-  ["gold_IPPP_8k"]=1
-  ["gold_2pass_720"]=36
-  ["gold_2pass_1080"]=20
-  ["gold_2pass_1k"]=20
-  ["gold_2pass_4k"]=4
-  ["gold_2pass_8k"]=1
-  ["silver_IPPP_720"]=68
-  ["silver_IPPP_1080"]=32
-  ["silver_IPPP_1k"]=32
-  ["silver_IPPP_4k"]=8
-  ["silver_IPPP_8k"]=1
-  ["silver_2pass_720"]=40
-  ["silver_2pass_1080"]=24
-  ["silver_2pass_1k"]=24
-  ["silver_2pass_4k"]=4
-  ["silver_2pass_8k"]=1
+  ["h264_gold_IPPP_720"]=52
+  ["h264_gold_IPPP_1080"]=24
+  ["h264_gold_IPPP_1k"]=24
+  ["h264_gold_IPPP_4k"]=4
+  ["h264_gold_2pass_720"]=36
+  ["h264_gold_2pass_1080"]=20
+  ["h264_gold_2pass_1k"]=20
+  ["h264_gold_2pass_4k"]=4
+  ["h264_silver_IPPP_720"]=68
+  ["h264_silver_IPPP_1080"]=32
+  ["h264_silver_IPPP_1k"]=32
+  ["h264_silver_IPPP_4k"]=8
+  ["h264_silver_2pass_720"]=40
+  ["h264_silver_2pass_1080"]=24
+  ["h264_silver_2pass_1k"]=24
+  ["h264_silver_2pass_4k"]=4
+
+  ["hevc_gold_IPPP_720"]=16
+  ["hevc_gold_IPPP_1080"]=8
+  ["hevc_gold_IPPP_1k"]=8
+  ["hevc_gold_IPPP_4k"]=2
+  ["hevc_gold_2pass_720"]=16
+  ["hevc_gold_2pass_1080"]=8
+  ["hevc_gold_2pass_1k"]=8
+  ["hevc_gold_2pass_4k"]=2
+  ["hevc_silver_IPPP_720"]=56
+  ["hevc_silver_IPPP_1080"]=32
+  ["hevc_silver_IPPP_1k"]=32
+  ["hevc_silver_IPPP_4k"]=8
+  ["hevc_silver_2pass_720"]=40
+  ["hevc_silver_2pass_1080"]=24
+  ["hevc_silver_2pass_1k"]=24
+  ["hevc_silver_2pass_4k"]=4
+  ["hevc_bronze_IPPP_720"]=72
+  ["hevc_bronze_IPPP_1080"]=40
+  ["hevc_bronze_IPPP_1k"]=40
+  ["hevc_bronze_IPPP_4k"]=8
+  ["hevc_bronze_2pass_720"]=48
+  ["hevc_bronze_2pass_1080"]=28
+  ["hevc_bronze_2pass_1k"]=28
+  ["hevc_bronze_2pass_4k"]=4
 )
 
-NPROC=${PROCS[${QUALITY}_${MODE}_${CASE}]}
+NPROC=${PROCS[${CODEC}_${QUALITY}_${MODE}_${CASE}]}
 ###########################################################
 device_id=0
 #/opt/vastai/vaststream/tools/vasmi getvideomulticore -d ${device_id} -i 0,1    # get fast mode
@@ -114,8 +134,8 @@ tune=1
 intraqpoffset=-2
 #QUALITYS="gold silver"
 renders=`ls /dev/dri | grep render`
-
-for codec in $CODECS; do
+codec=$CODEC
+#for codec in $CODECS; do
   #for quality in $QUALITYS; do
 	echo "================ codec=$codec quality=$QUALITY nproc=$NPROC"
     #for i in $(seq $ITER); do    # loops
@@ -143,7 +163,7 @@ for codec in $CODECS; do
 	  rm -rf "${out_dir}/render*output.${codec}"
     #done    # loops
   #done    # quality
-done    # codec
+#done    # codec
 
 ###########################################################################################################################################################
 #ffmpeg -y -vsync 0 -noautorotate -hwaccel vaapi -hwaccel_output_format vaapi -hwaccel_device:v /dev/dri/${render} -i ${SOURCE_STREAM} \
