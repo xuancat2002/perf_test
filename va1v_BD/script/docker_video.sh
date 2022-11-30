@@ -2,7 +2,7 @@
 #docker load -i docker_NPI_v1.4.tar
 
 IDX=${1:-0}
-CASE=${2:-1}
+CASE=${2:-1k}
 #File="ParkScene_1920x1080_30fps_8M.mp4"
 #URL="http://qa.vastai.com/datasets/$File"
 DR_NAME=`rpm -qa|grep vastai-pci`
@@ -38,17 +38,24 @@ if [ $CASE -eq 0 ]; then
   docker exec video_card$IDX bash -c "source /etc/profile; sh $DIR/load_video.sh 1"
 else
 	
+
   declare -A VIDEOS=( 
-    ["1"]="vidyo1_1280x720_30fps_5M_60400frames.mp4" 
-    ["2"]="ParkScene_1920x1080_30fps_loop_8Mx4.mp4"
-	["3"]="cdzi-hevc.mp4"  # (not found)
-	["4"]="4KH264_5.0Mbps_30fps_8bit_Brazil_5M_3840x2160.mp4"
-	["5"]="Winter_Saint_Petersburg_Russia_1500frames_h264_7680x4320.mp4"
+    ["720"]="vidyo1_1280x720_30fps_5M_60400frames.mp4"
+  	["1080"]="cdzi-hevc.mp4"  #1080p
+    ["1k"]="ParkScene_1920x1080_30fps_loop_8Mx4.mp4"
+  	["4k"]="4KH264_5.0Mbps_30fps_8bit_Brazil_5M_3840x2160.mp4"
+  	["8k"]="Winter_Saint_Petersburg_Russia_1500frames_h264_7680x4320.mp4"
   )
   DIR=/opt/vastai/vaststream/samples/
   docker cp /data/video_data/${VIDEOS[$CASE]} video_card${IDX}:$DIR
   docker cp $host_dataset_path/load_video2.sh video_card${IDX}:$DIR
-  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh 1"
+  # video:  720/1080/1k/4k/8k
+  # proc:   52/24/24/4/2
+  # loop:   1
+  # test:   1pass/2pass/IPPP
+  # decode: soft/hard
+  # mode:   normal/fast
+  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE 52 1 IPPP hard normal"
 fi
 
 #docker exec card$IDX bash -c 'source /etc/profile && sh /opt/vastai/vaststream/samples/script/video_press.sh'
