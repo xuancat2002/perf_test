@@ -22,33 +22,34 @@ mkdir -p ${out_dir}
 
 declare -A VIDEOS=( 
     ["720"]="vidyo1_1280x720_30fps_5M_60400frames.mp4"
-	["1080"]="cdzi-hevc.mp4"  #1080p
+    ["1080"]="cdzi-hevc.mp4"  #1080p
     ["1k"]="ParkScene_1920x1080_30fps_loop_8Mx4.mp4"
-	["4k"]="4KH264_5.0Mbps_30fps_8bit_Brazil_5M_3840x2160.mp4"
-	["8k"]="Winter_Saint_Petersburg_Russia_1500frames_h264_7680x4320.mp4"
+    ["2k"]="4KH264_5.0Mbps_30fps_8bit_Brazil_5M_3840x2160.mp4"
+    ["4k"]="Winter_Saint_Petersburg_Russia_h264_7680x4320_loop5.mp4"
+    ["8k"]="Winter_Saint_Petersburg_Russia_1500frames_h264_7680x4320.mp4"
 )
 SOURCE_STREAM="/opt/vastai/vaststream/samples/${VIDEOS[$CASE]}"
 declare -A BITRATES=( 
-	["720"]=2000000
+    ["720"]=2000000
     ["1080"]=2000000
     ["1k"]=2000000
-	["4k"]=4000000
-	["8k"]=8000000
+    ["4k"]=4000000
+    ["8k"]=8000000
 )
 bitrate="${BITRATES[$CASE]}"
 declare -A FRAMES_FAST=( # soft decode, fast mode    
-	["720"]=25000
+    ["720"]=25000
     ["1080"]=18000 
     ["1k"]=18000
-	["4k"]=3000
-	["8k"]=1500
+    ["4k"]=3000
+    ["8k"]=1500
 )
 declare -A FRAMES_NORMAL=( # soft decode, normal mode
-	["720"]=9000
+    ["720"]=9000
     ["1080"]=6000 
     ["1k"]=6000
-	["4k"]=1000
-	["8k"]=500
+    ["4k"]=1000
+    ["8k"]=500
 )
 
 #-----------------------------minigopsize---lookahead------------#
@@ -56,15 +57,15 @@ declare -A FRAMES_NORMAL=( # soft decode, normal mode
 #2: 2pass lookaheadlength=20 minigopsize=0 
 #3: IPPP  lookaheadlength=0 minigopsize=1 
 if [ "${MODE}" = "1pass" ]; then
-	mode=1pass
+    mode=1pass
     lookahead=0
-	gopsize=0
+    gopsize=0
 elif [ "${MODE}" = "2pass" ]; then
-	mode=2pass
+    mode=2pass
     lookahead=20
     gopsize=0
 elif [ "${MODE}" = "IPPP" ]; then
-	mode=IPPP
+    mode=IPPP
     lookahead=0
     gopsize=1
 fi
