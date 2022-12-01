@@ -3,7 +3,15 @@ date
 COUNT=`vasmi summary|grep VA1|wc -l`
 INDEX=$((COUNT-1))
 PARAM=`echo $CASE | sed 's/_/ /g'`
-docker stop `docker ps -aq`
+FC=`ls /data|wc -l`
+if [ $FC -lt 1 ]; then
+  mount -t nfs 192.168.20.2:/nfs/sedata /data
+fi
+DC=`docker ps|wc -l`
+if [ $DC -gt 1 ]; then
+  docker stop `docker ps -aq`
+fi
+
 for i in $(seq 0 $INDEX); do
   echo "video card$i"
   #./start_perf.sh $i        # cpu.csv/pcie.csv/mem.csv
