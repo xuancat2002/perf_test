@@ -48,11 +48,11 @@ if [ $CASE -eq 0 ]; then
 else
   declare -A VIDEOS=( 
     ["720"]="vidyo1_1280x720_30fps_5M_60400frames.mp4"
-  	["1080"]="cdzi-hevc.mp4"  #1080p
+    ["1080"]="cdzi-hevc.mp4"
     ["1k"]="ParkScene_1920x1080_30fps_loop_8Mx4.mp4"
     ["2k"]="4KH264_5.0Mbps_30fps_8bit_Brazil_5M_3840x2160.mp4"
     ["4k"]="Winter_Saint_Petersburg_Russia_h264_7680x4320_loop5.mp4"
-  	["8k"]="Winter_Saint_Petersburg_Russia_1500frames_h264_7680x4320.mp4"
+    ["8k"]="Winter_Saint_Petersburg_Russia_1500frames_h264_7680x4320.mp4"
   )
   DIR=/opt/vastai/vaststream/samples/
   docker cp /data/video_data/${VIDEOS[$CASE]} video_card${IDX}:$DIR
