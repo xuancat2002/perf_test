@@ -37,7 +37,7 @@ sleep 2
 docker run --rm -itd --name video_card${IDX}  \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
-  -v ${OUT}/output:${DIR}/output \
+  -v ${OUT}:${DIR}/output \
   ${ImageID} /bin/bash
 sleep 5
 
