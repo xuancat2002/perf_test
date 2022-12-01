@@ -41,7 +41,7 @@ docker run --rm -itd --name video_card${IDX}  \
   ${ImageID} /bin/bash
 sleep 5
 
-if [ $CASE -eq 0 ]; then
+if [ "$CASE" = "0" ]; then
   docker cp $host_dataset_path/ParkScene_1920x1080_30fps_8M.mp4 video_card${IDX}:$DIR
   docker cp $host_dataset_path/load_video.sh video_card${IDX}:$DIR
   docker exec video_card$IDX bash -c "source /etc/profile; sh $DIR/load_video.sh 1"
