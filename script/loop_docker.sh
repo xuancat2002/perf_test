@@ -3,6 +3,7 @@ date
 COUNT=`vasmi summary|grep VA1|wc -l`
 INDEX=$((COUNT-1))
 PARAM=`echo $CASE | sed 's/_/ /g'`
+docker stop `docker ps -aq`
 for i in $(seq 0 $INDEX); do
   echo "video card$i"
   #./start_perf.sh $i        # cpu.csv/pcie.csv/mem.csv
