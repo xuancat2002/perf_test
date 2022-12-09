@@ -224,7 +224,7 @@ def download_results(user, ip, file, target_path):
     # cmd="scp -r root@192.168.20.209:/home/test/dataset/logs/va1v_video1 /Users/xuan/Desktop/VA1V/"
     print(cmd)
     out=exec_cmd(cmd)
-    #print(out)
+    print(out)
 def run_script_remote(user, ip, path, file, opt, wait=True):
     if wait:
         cmd="ssh {}@{} 'cd {}; ./{} {}'".format(user, ip, path, file, opt)
