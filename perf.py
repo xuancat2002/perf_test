@@ -204,7 +204,7 @@ def start_perf(host,work_dir,case_name,local_dir):
     #write_perf_file(work_folder, perf_file, ['mpstat','mem','pcie'])
     run_script_remote('root', host, work_dir, perf_file, case_name, False)
 def stop_perf(host):
-    exec_cmd("ssh root@{} killall mpstat pcm-pcie pmt".format(host))
+    exec_cmd("ssh root@{} killall mpstat pcie pmt sar".format(host))
 
 workloads={
     'v_baidu':     ['loop_docker.sh', 'docker_video.sh','load_video2.sh'],
@@ -271,7 +271,6 @@ def start_dockers(host,mode,path,local_dir,case):
     run_script_remote('root', host, path, workloads[mode][0], case)
 def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
-    #folder = '/Users/xuan/Desktop/VA1V/script_latest/'  # local
     folder = 'script/'  # local
     full="{}_{}".format(name,case)
     start_perf(host,path1,full,folder)
@@ -280,18 +279,19 @@ def test_and_monitor(host,name,case):
     #wait_for_pid_finish(workloads[name])
     stop_perf(host)
     download_results('root', host, path1+'/logs/'+full, "results")
+    print("plot charts")
     plot_metrics("results",full)
 
 def baidu_cases():
   test_and_monitor("192.168.20.209","v_baidu","720_bronze_IPPP_hard_normal_hevc")
-  time.sleep(60)
-  test_and_monitor("192.168.20.209","v_baidu","720_silver_IPPP_hard_normal_h264")
-  time.sleep(60)
-  test_and_monitor("192.168.20.209","v_baidu","720_gold_IPPP_hard_normal_h264")
-  time.sleep(60)
-  test_and_monitor("192.168.20.209","v_baidu","1k_gold_2pass_hard_normal_h264")
-  time.sleep(60)
-  test_and_monitor("192.168.20.209","v_baidu","1k_gold_IPPP_hard_normal_h264")
+  #time.sleep(60)
+  #test_and_monitor("192.168.20.209","v_baidu","720_silver_IPPP_hard_normal_h264")
+  #time.sleep(60)
+  #test_and_monitor("192.168.20.209","v_baidu","720_gold_IPPP_hard_normal_h264")
+  #time.sleep(60)
+  #test_and_monitor("192.168.20.209","v_baidu","1k_gold_2pass_hard_normal_h264")
+  #time.sleep(60)
+  #test_and_monitor("192.168.20.209","v_baidu","1k_gold_IPPP_hard_normal_h264")
 
   #test_and_monitor("192.168.20.209","v_baidu","4k_gold_IPPP_hard_normal_h264")
   #test_and_monitor("192.168.20.209","v_baidu", "720_gold_2pass_hard_normal_h264")
