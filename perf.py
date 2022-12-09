@@ -95,6 +95,44 @@ def plot_pcie(folder,card):
     )
     #fig.show()
     fig.write_html(folder+'/'+card+"/pcie.html")
+
+def plot_pcie_pmt(folder,card):
+    file=folder+'/'+card+'/pcie.csv'
+    output=exec_cmd("head -20 {} |awk -F, '{{print $2}}'|grep -v Bus|sort|uniq".format(file))
+    pcie_array=output.split('\n')
+    data1 = pd.read_csv(file)
+    all_lines=[]
+    for pci in pcie_array:
+        data = data1[(data1["Bus"] == pci)].copy()
+        data.insert(0, 'index', range(1, 1 + len(data)))
+        #print(data)
+        data["IB read"] = pd.to_numeric(data["IB read"], errors='coerce')
+        data["IB write"] = pd.to_numeric(data["IB write"], errors='coerce')
+        data["OB read"] = pd.to_numeric(data["OB read"], errors='coerce')
+        data["OB write"] = pd.to_numeric(data["OB write"], errors='coerce')
+        line1 = go.Scatter(x=data['index'], y=data['IB read'], name=pci+' InRead')
+        line2 = go.Scatter(x=data['index'], y=data['IB write'], name=pci+' InWrite')
+        line3 = go.Scatter(x=data['index'], y=data['OB read'], name=pci+' OutRead')
+        line4 = go.Scatter(x=data['index'], y=data['OB write'], name=pci+' OutWrite')
+        all_lines.append(line1)
+        all_lines.append(line2)
+        all_lines.append(line3)
+        all_lines.append(line4)
+    fig = go.Figure(all_lines)
+    fig.update_layout(
+        title = str(len(pcie_array)) + " cards bandwidth",
+        # xaxis_title="Index",
+        # yaxis_title="Performance Trends"
+        # font_family="Courier New",
+        # font_color="blue",
+        # title_font_family="Times New Roman",
+        # title_font_color="red",
+        title_font_size=20,
+        # legend_title_font_color="green"
+    )
+    #fig.show()
+    fig.write_html(folder + '/' + card + "/pcie.html")
+
 def plot_cpu(folder,card,index):
     data2 = pd.read_csv(folder+'/'+card+'/cpu.csv', header=[1], delim_whitespace=True)
     #print(data2)
@@ -117,12 +155,13 @@ def plot_cpu(folder,card,index):
         )
     fig.write_html(folder+'/'+card+"/cpu"+index+".html")
 def plot_metrics(path,card):
-    plot_pcie(path,card)
+    #plot_pcie(path,card)
     #plot_mem(path,card)
+    plot_pcie_pmt(path,card)
     plot_mem_pmt(path,card)
     plot_cpu(path,card,'all')
     plot_cpu(path,card,'0')
-    #exec_cmd("cp perf.log results/{}/".format(card))
+    #exec_cmd("mv perf.log results/{}/".format(card))
     exec_cmd("rm -rf results/{}.tgz".format(card))
     exec_cmd("tar zcf results/{}.tgz results/{}".format(card,card))
 
