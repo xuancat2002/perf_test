@@ -120,7 +120,7 @@ def plot_pcie_pmt(folder,card):
         all_lines.append(line4)
     fig = go.Figure(all_lines)
     fig.update_layout(
-        title = str(len(pcie_array)) + " cards bandwidth",
+        title = str(len(pcie_array)) + " cards pcie bandwidth",
         # xaxis_title="Index",
         # yaxis_title="Performance Trends"
         # font_family="Courier New",
