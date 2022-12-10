@@ -207,7 +207,8 @@ def stop_perf(host):
     exec_cmd("ssh root@{} killall mpstat pcie pmt sar".format(host))
 
 workloads={
-    'v_baidu':     ['loop_docker.sh', 'docker_video.sh','load_video2.sh'],
+    #'v_baidu':     ['loop_docker.sh', 'docker_video.sh','load_video2.sh'],
+    'v_baidu':     ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
     'v_transcode': ['docker_video.sh','load_video.sh'],
     'a_resnet50':  ['docker_resnet50.sh'],
     'a_bert':      ['docker_bert.sh','load_bert.sh'],
