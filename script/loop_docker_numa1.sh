@@ -19,4 +19,6 @@ fi
 sleep 30
 cat  video_card2.$CASE.log | sed -e 's/\r/\n/g'|grep ^frame= |awk -F= '{print $3}'| awk '{ total += $1; count++ } END { print total/count }' > frame2.log
 cat  video_card3.$CASE.log | sed -e 's/\r/\n/g'|grep ^frame= |awk -F= '{print $3}'| awk '{ total += $1; count++ } END { print total/count }' > frame3.log
-no_tmpfs: fps=32.0148
+#no_tmpfs: fps=32.0482 31.935
+#   tmpfs: fps=32.039  31.9363
+
