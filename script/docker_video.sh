@@ -31,6 +31,12 @@ DIR=/opt/vastai/vaststream/samples/
 OUT=${host_dataset_path}/output$IDX
 mkdir -p ${OUT}
 rm -rf ${OUT}/*
+TMP=`mount |grep tmpfs|grep $OUT|wc -l`
+if [ $TMP -gt 0 ]; then
+   echo tmpfs on $OUT
+else
+   mount -t tmpfs -o size=100g tempfs $OUT
+fi
 
 docker stop video_card${IDX}
 sleep 2
