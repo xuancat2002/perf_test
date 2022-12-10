@@ -25,3 +25,9 @@ for i in $(seq 0 $INDEX); do
   #./stop_perf.sh $i
   sleep 1
 done
+
+sleep 30
+for f in `ls video_card*log`; do 
+  fps=`cat $f | sed -e 's/\r/\n/g'|grep ^frame= |awk -F= '{print $3}'| awk '{ total += $1; cnt++ } END { print total/cnt }'`
+  echo "$f fps=$fps" >> logs/$CASE/fps.log
+done
