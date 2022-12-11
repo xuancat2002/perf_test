@@ -2,7 +2,11 @@ CASE=${1:-1k}      # test case
 date
 COUNT=`vasmi summary|grep VA1|wc -l`
 INDEX=$((COUNT-1))
-PARAM=`echo $CASE | sed 's/_/ /g'`
+
+NAME=`echo $CASE | awk -F. '{print $1}'`
+OPT=`echo $CASE | awk -F. '{print $2}'`
+PARAM=`echo $OPT | sed 's/_/ /g'`
+
 FC=`ls /data|wc -l`
 if [ $FC -lt 1 ]; then
   mount -t nfs 192.168.20.2:/nfs/sedata /data

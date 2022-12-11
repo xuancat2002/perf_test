@@ -269,7 +269,7 @@ def start_dockers(host,mode,path,local_dir,case):
     for script in workloads[mode]:
         send_file_remote('root', host, local_dir+script, path)
     #send_file_remote('root', host, folder+"vastai_pci.ko", path)  # already installed
-    run_script_remote('root', host, path, workloads[mode][0], case)
+    run_script_remote('root', host, path, workloads[mode][0], mode+'.'+case)
 def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     folder = 'script/'  # local

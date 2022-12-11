@@ -1,7 +1,9 @@
-CASE=${1:-720_bronze_IPPP_hard_normal_hevc}
+CASE=${1:-v_baidu_720_bronze_IPPP_hard_normal_hevc}
 date
 COUNT=`vasmi summary|grep VA1|wc -l`
-PARAM=`echo $CASE | sed 's/_/ /g'`
+NAME=`echo $CASE | awk -F. '{print $1}'`
+OPT=`echo $CASE | awk -F. '{print $2}'`
+PARAM=`echo $OPT | sed 's/_/ /g'`
 
 DC=`docker ps|wc -l`
 if [ $DC -gt 1 ]; then
@@ -17,9 +19,11 @@ fi
          ./docker_video.sh $i $PARAM > video_card$i.$CASE.log 2>&1
 
 sleep 30
+FPS=logs/$CASE/fps.log
+echo "" > $FPS
 for f in `ls video_card*log`; do 
   fps=`cat $f | sed -e 's/\r/\n/g'|grep ^frame= |awk -F= '{print $3}'| awk '{ total += $1; cnt++ } END { print total/cnt }'`
-  echo "$f fps=$fps" >> logs/$CASE/fps.log
+  echo "$f fps=$fps" >> $FPS
 done
 
 #no_tmpfs: fps=32.0482 31.935
