@@ -272,7 +272,7 @@ def start_dockers(host,mode,path,local_dir,case):
 def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     folder = 'script/'  # local
-    full="{}_{}".format(name,case)
+    full="{}.{}".format(name,case)
     start_perf(host,path1,full,folder)
     start_dockers(host,name,path1,folder,case)
     time.sleep(5)
