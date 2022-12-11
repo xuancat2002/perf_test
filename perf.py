@@ -120,7 +120,7 @@ def plot_pcie_pmt(folder,card):
         all_lines.append(line4)
     fig = go.Figure(all_lines)
     fig.update_layout(
-        title = str(len(pcie_array)) + " cards bandwidth",
+        title = str(len(pcie_array)) + " cards pcie bandwidth",
         # xaxis_title="Index",
         # yaxis_title="Performance Trends"
         # font_family="Courier New",
@@ -207,7 +207,8 @@ def stop_perf(host):
     exec_cmd("ssh root@{} killall mpstat pcie pmt sar".format(host))
 
 workloads={
-    'v_baidu':     ['loop_docker.sh', 'docker_video.sh','load_video2.sh'],
+    #'v_baidu':     ['loop_docker.sh', 'docker_video.sh','load_video2.sh'],
+    'v_baidu':     ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
     'v_transcode': ['docker_video.sh','load_video.sh'],
     'a_resnet50':  ['docker_resnet50.sh'],
     'a_bert':      ['docker_bert.sh','load_bert.sh'],
@@ -268,7 +269,7 @@ def start_dockers(host,mode,path,local_dir,case):
     for script in workloads[mode]:
         send_file_remote('root', host, local_dir+script, path)
     #send_file_remote('root', host, folder+"vastai_pci.ko", path)  # already installed
-    run_script_remote('root', host, path, workloads[mode][0], case)
+    run_script_remote('root', host, path, workloads[mode][0], mode+'.'+case)
 def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     folder = 'script/'  # local
