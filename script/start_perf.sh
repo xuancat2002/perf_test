@@ -8,7 +8,10 @@ DIR="logs/$CARD"
 
 mkdir -p $DIR
 PCIE=`lspci|grep acc|awk '{print $1}'| tr '\n' ','`
-#vasmi dmon -d 0,1,2,3  > $DIR/dmon.log 2>&1 &
+CNT=`lspci|grep acc|wc -l`
+CNT1=$((CNT-1))
+DEVS=`echo $(seq 0 $CNT1)|tr ' ' ','`
+vasmi dmon -d $DEVS -i 0,1 > $DIR/dmon.log  2>&1 &
 mpstat -P ALL 2      > $DIR/cpu.csv  2>/dev/null &
 sar -d 2             > $DIR/disk.csv 2>/dev/null &
 pmt  --delay=2    --output=$DIR/mem.csv  > /dev/null 2>&1 &
