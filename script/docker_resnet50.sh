@@ -10,7 +10,7 @@ DR_NAME=`rpm -qa|grep vastai-pci`
 if [ "$DR_NAME" = "vastai-pci-server-adaption-va1-v-0622-hwtype-1-00.22.06.28-1dkms.x86_64" ]; then
   AI_ImageID="2c783a6d863a"    # old driver: 22.06.28
   docker_image=/data/driver/resnet50_old/docker_NPI_v1.4.tar
-elif [ "$DR_NAME" = "vastai-pci-sw-v1-3-vd-hwtype-1_00.22.11.23_x86_64" ]; then
+elif [ "$DR_NAME" = "vastai-pci-sw-v1-3-vd-hwtype-1-00.22.11.23-1dkms.x86_64" ]; then
   AI_ImageID="2c783a6d863a"    # new driver: 22.11.23
   docker_image=/data/driver/resnet50_old/docker_NPI_v1.4.tar
 fi
