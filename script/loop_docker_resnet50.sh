@@ -11,6 +11,7 @@ INDEX=$((COUNT-1))
 FC=`ls /data|wc -l`
 if [ $FC -lt 1 ]; then
   mount -t nfs 192.168.20.2:/nfs/sedata /data
+  # cp -r /data/perf_test/ai_dataset/2012img /home/test/dataset/
 fi
 DC=`docker ps|wc -l`
 if [ $DC -gt 1 ]; then
