@@ -154,9 +154,128 @@ def plot_cpu(folder,card,index):
             #legend_title_font_color="green"
         )
     fig.write_html(folder+'/'+card+"/cpu"+index+".html")
+def plot_vastai_dmon(folder,card):
+    file=folder+'/'+card+'/dmon.log'
+    output = exec_cmd("head -100 {}|grep -v Vastai|grep -v '<1/1>'|grep -v '\---' |grep -v 'aic' |awk '{{print $1}}'|sort|uniq".format(file))
+    vastai_array=output.split('\n')
+    #print(vastai_array)
+    pwr_all_lines = []
+    temp_all_lines = []
+    mem_all_lines = []
+    oclk_all_lines = []
+    dclk_all_lines = []
+    eclk_all_lines = []
+    ai_all_lines = []
+    dec_all_lines = []
+    enc_all_lines = []
+    for chip in vastai_array:
+        exec_cmd("echo 'aic/die   pwr(W)   temp(C)   %mem   oclk(MHz)   dclk(MHz)   eclk(MHz)     %ai    %dec    %enc' > tmp.csv")
+        exec_cmd("grep {} {} |grep -v '<' >> tmp.csv".format(chip, file))
+        data1 = pd.read_csv("tmp.csv",delim_whitespace=True)
+        data1.insert(0, 'index', range(1, 1 + len(data1)))
+        data1["pwr(W)"] = pd.to_numeric(data1["pwr(W)"], errors='coerce')
+        data1["temp(C)"] = pd.to_numeric(data1["temp(C)"], errors='coerce')
+        data1["%mem"] = pd.to_numeric(data1["%mem"], errors='coerce')
+        data1["oclk(MHz)"] = pd.to_numeric(data1["oclk(MHz)"], errors='coerce')
+        data1["dclk(MHz)"] = pd.to_numeric(data1["dclk(MHz)"], errors='coerce')
+        data1["eclk(MHz)"] = pd.to_numeric(data1["eclk(MHz)"], errors='coerce')
+        data1["%ai"] = pd.to_numeric(data1["%ai"], errors='coerce')
+        data1["%dec"] = pd.to_numeric(data1["%dec"], errors='coerce')
+        data1["%enc"] = pd.to_numeric(data1["%enc"], errors='coerce')
+        line_pwr = go.Scatter(x=data1['index'], y=data1['pwr(W)'], name=chip + ' pwr(W)')
+        line_temp = go.Scatter(x=data1['index'], y=data1['temp(C)'], name=chip + ' temp(C)')
+        line_mem = go.Scatter(x=data1['index'], y=data1['%mem'], name=chip + ' %mem')
+        line_oclk = go.Scatter(x=data1['index'], y=data1['oclk(MHz)'], name=chip + ' oclk(MHz)')
+        line_dclk = go.Scatter(x=data1['index'], y=data1['dclk(MHz)'], name=chip + ' dclk(MHz)')
+        line_eclk = go.Scatter(x=data1['index'], y=data1['eclk(MHz)'], name=chip + ' eclk(MHz)')
+        line_ai = go.Scatter(x=data1['index'], y=data1['%ai'], name=chip + ' %ai')
+        line_dec = go.Scatter(x=data1['index'], y=data1['%dec'], name=chip + ' %dec')
+        line_enc = go.Scatter(x=data1['index'], y=data1['%enc'], name=chip + ' %enc')
+        pwr_all_lines.append(line_pwr)
+        temp_all_lines.append(line_temp)
+        mem_all_lines.append(line_mem)
+        oclk_all_lines.append(line_oclk)
+        dclk_all_lines.append(line_dclk)
+        eclk_all_lines.append(line_eclk)
+        ai_all_lines.append(line_ai)
+        dec_all_lines.append(line_dec)
+        enc_all_lines.append(line_enc)
+    fig_pwr = go.Figure(pwr_all_lines)
+    fig_temp = go.Figure(temp_all_lines)
+    fig_mem = go.Figure(mem_all_lines)
+    fig_oclk = go.Figure(oclk_all_lines)
+    fig_dclk = go.Figure(dclk_all_lines)
+    fig_eclk = go.Figure(eclk_all_lines)
+    fig_ai = go.Figure(ai_all_lines)
+    fig_dec = go.Figure(dec_all_lines)
+    fig_enc = go.Figure(enc_all_lines)
+    fig_pwr.update_layout(
+        title=str(len(vastai_array)) + " vastai pwr(W)",
+        # xaxis_title="Index",
+        # yaxis_title="Performance Trends"
+        # font_family="Courier New",
+        # font_color="blue",
+        # title_font_family="Times New Roman",
+        # title_font_color="red",
+        title_font_size=20,
+        # legend_title_font_color="green"
+    )
+    fig_temp.update_layout(
+        title=str(len(vastai_array)) + " vastai temp(C)",
+        title_font_size=20,
+    )
+    fig_mem.update_layout(
+        title=str(len(vastai_array)) + " vastai memory",
+        title_font_size=20,
+    )
+    fig_oclk.update_layout(
+        title=str(len(vastai_array)) + " vastai oclk(MHz)",
+        title_font_size=20,
+    )
+    fig_dclk.update_layout(
+        title=str(len(vastai_array)) + " vastai dclk(MHz)",
+        title_font_size=20,
+    )
+    fig_eclk.update_layout(
+        title=str(len(vastai_array)) + " vastai eclk(MHz)",
+        title_font_size=20,
+    )
+    fig_ai.update_layout(
+        title=str(len(vastai_array)) + " vastai %AI",
+        title_font_size=20,
+    )
+    fig_dec.update_layout(
+        title=str(len(vastai_array)) + " vastai %decode",
+        title_font_size=20,
+    )
+    fig_enc.update_layout(
+        title=str(len(vastai_array)) + " vastai %encode",
+        title_font_size=20,
+    )
+    #fig_pwr.show()
+    #fig_temp.show()
+    #fig_mem.show()
+    #fig_oclk.show()
+    #fig_dclk.show()
+    #fig_eclk.show()
+    #fig_ai.show()
+    #fig_dec.show()
+    #fig_enc.show()
+    #fig.write_html(folder + '/' + card + "/dmon.html")
+    fig_pwr.write_html(folder + '/' + card + "/dmon_pwr.html")
+    fig_temp.write_html(folder + '/' + card + "/dmon_temp.html")
+    fig_mem.write_html(folder + '/' + card + "/dmon_mem.html")
+    fig_oclk.write_html(folder + '/' + card + "/dmon_oclk.html")
+    fig_dclk.write_html(folder + '/' + card + "/dmon_dclk.html")
+    fig_eclk.write_html(folder + '/' + card + "/dmon_eclk.html")
+    fig_ai.write_html(folder + '/' + card + "/dmon_ai.html")
+    fig_dec.write_html(folder + '/' + card + "/dmon_dec.html")
+    fig_enc.write_html(folder + '/' + card + "/dmon_enc.html")
+
 def plot_metrics(path,card):
     #plot_pcie(path,card)
     #plot_mem(path,card)
+    plot_vastai_dmon(path,card)
     plot_pcie_pmt(path,card)
     plot_mem_pmt(path,card)
     plot_cpu(path,card,'all')
