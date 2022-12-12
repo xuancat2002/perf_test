@@ -12,11 +12,13 @@ CODEC=${7:-hevc}
 #File="ParkScene_1920x1080_30fps_8M.mp4"
 #URL="http://qa.vastai.com/datasets/$File"
 DR_NAME=`rpm -qa|grep vastai-pci`
+ImageID=9f8d0ce57641
 if [ "$DR_NAME" = "vastai-pci-server-adaption-va1-v-0622-hwtype-1-00.22.06.28-1dkms.x86_64" ]; then
   ImageID=2c783a6d863a    # old driver
 elif [ "$DR_NAME" = "vastai-pci-sw-v1-3-vd-hwtype-1-00.22.11.23-1dkms.x86_64" ]; then
   ImageID=9f8d0ce57641    # new driver: sw_v1_3_vd
 fi
+
 host_dataset_path=/home/test/dataset
 NIDX=$((IDX+1))
 PCI_N=`lspci|grep accelerators | sed -n ${NIDX}p|awk '{print $1}'`
