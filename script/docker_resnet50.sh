@@ -3,6 +3,8 @@
 #libcgroup-tools-0.41-19.el8.x86_64
 
 IDX=${1:-0}
+NAME=${2:-model}
+LOOP=${3:-5}
 #AI_ImageID=5ae2fba24458
 DR_NAME=`rpm -qa|grep vastai-pci`
 if [ "$DR_NAME" = "vastai-pci-server-adaption-va1-v-0622-hwtype-1-00.22.06.28-1dkms.x86_64" ]; then
@@ -42,7 +44,7 @@ docker run --rm -itd --name ai_card${IDX} \
   ${AI_ImageID} /bin/bash
 sleep 5
 
-docker exec ai_card$IDX bash -c "source /etc/profile && cd $EXEC; ./performance_s.sh 3"
+docker exec ai_card$IDX bash -c "source /etc/profile && cd $EXEC; ./performance_s.sh $LOOP"
 #DIR=/LH/RUN/40decode
 #docker exec ai_card$IDX bash -c "source /etc/profile && nohup $DIR/run_40decode.sh &"  # todo add loop number
 # nohup ./run_40decode.sh &

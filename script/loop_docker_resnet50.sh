@@ -1,4 +1,5 @@
 CASE=${1:-1k}      # test case
+LOOP=${2:-5}       # loops
 date
 COUNT=`vasmi summary|grep VA1|wc -l`
 INDEX=$((COUNT-1))
