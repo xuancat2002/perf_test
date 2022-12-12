@@ -326,8 +326,8 @@ def stop_perf(host):
     exec_cmd("ssh root@{} killall mpstat pcie pmt sar".format(host))
 
 workloads={
-    #'v_baidu':     ['loop_docker.sh', 'docker_video.sh','load_video2.sh'],
-    'v_baidu':     ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
+    #'v_baidu':    ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
+    'v_baidu':     ['loop_docker.sh',       'docker_video.sh','load_video2.sh'],
     'v_transcode': ['docker_video.sh','load_video.sh'],
     'a_resnet50':  ['loop_docker_resnet50.sh', 'docker_resnet50.sh'],
     'a_bert':      ['docker_bert.sh','load_bert.sh'],
@@ -412,7 +412,6 @@ def baidu_cases():
   #test_and_monitor("192.168.20.209","v_baidu","1k_gold_2pass_hard_normal_h264")
   #time.sleep(60)
   #test_and_monitor("192.168.20.209","v_baidu","1k_gold_IPPP_hard_normal_h264")
-
   #test_and_monitor("192.168.20.209","v_baidu","4k_gold_IPPP_hard_normal_h264")
   #test_and_monitor("192.168.20.209","v_baidu", "720_gold_2pass_hard_normal_h264")
   #test_and_monitor("192.168.20.209","v_transcode")
@@ -423,5 +422,5 @@ def baidu_cases():
 def modeling_cases():
   test_and_monitor("192.168.20.209","a_resnet50","5")
 
-#baidu_cases()
-modeling_cases()
+baidu_cases()
+#modeling_cases()
