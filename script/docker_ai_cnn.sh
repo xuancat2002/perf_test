@@ -5,7 +5,7 @@ MODE=${2:-mobilenet_v1}
 ITER=1000000
 PERF=/opt/benchmark/conf/mobilenet/perf
 
-AI_ImageID= reg.devops.com/base/benchmark:v1.2.2
+AI_ImageID="reg.devops.com/base/benchmark:v1.2.2"
 DR_NAME=`rpm -qa|grep vastai-pci`
 if [ "$DR_NAME" = "vastai-pci-sw-v1-1-alpha-hwtype-2-00.22.09.05-1dkms.x86_64" ]; then
   AI_ImageID="744a372861d7"    # perf test image
