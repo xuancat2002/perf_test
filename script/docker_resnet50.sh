@@ -37,6 +37,7 @@ else
 fi
 
 #docker run -it --name sit-1011-0 --runtime=vastai -e VASTAI_VISIBLE_DEVICES=0 -v /data/qa-data/test-result/ai/datasets/:/opt/vastai/vaststream/release/samples/datasets/ cb1b402e82cd /bin/bash
+echo "docker run --rm -itd --name ai_card${IDX} --cgroup-parent=numanode${NODE} --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} -v ${host_dataset_path}:${DATA_IN} ${AI_ImageID} /bin/bash"
 docker run --rm -itd --name ai_card${IDX} \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
