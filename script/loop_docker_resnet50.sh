@@ -1,5 +1,5 @@
 CASE=${1:-1k}      # test case
-LOOP=${2:-5}       # loops
+#LOOP=${2:-5}       # loops
 date
 COUNT=`vasmi summary|grep VA1|wc -l`
 INDEX=$((COUNT-1))
@@ -20,13 +20,13 @@ fi
 
 for i in $(seq 0 $INDEX); do
   echo "ai card$i"
-  if [ $i -lt $INDEX ]; then
-    echo "./docker_resnet50.sh $i $NAME $OPT > resnet_card$i.$CASE.log 2>&1 &"
-          ./docker_resnet50.sh $i $NAME $OPT > resnet_card$i.$CASE.log 2>&1 &
-  else
+  #if [ $i -lt $INDEX ]; then
+  #  echo "./docker_resnet50.sh $i $NAME $OPT > resnet_card$i.$CASE.log 2>&1 &"
+  #        ./docker_resnet50.sh $i $NAME $OPT > resnet_card$i.$CASE.log 2>&1 &
+  #else
     echo "./docker_resnet50.sh $i $NAME $OPT > resnet_card$i.$CASE.log last"
           ./docker_resnet50.sh $i $NAME $OPT > resnet_card$i.$CASE.log 2>&1
-  fi
+  #fi
   sleep 1
 done
 

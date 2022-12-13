@@ -6,6 +6,7 @@ IDX=${1:-0}
 NAME=${2:-model}
 LOOP=${3:-5}
 #AI_ImageID=5ae2fba24458
+AI_ImageID="2c783a6d863a"
 DR_NAME=`rpm -qa|grep vastai-pci`
 if [ "$DR_NAME" = "vastai-pci-server-adaption-va1-v-0622-hwtype-1-00.22.06.28-1dkms.x86_64" ]; then
   AI_ImageID="2c783a6d863a"    # old driver: 22.06.28

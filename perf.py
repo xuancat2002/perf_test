@@ -323,7 +323,7 @@ def start_perf(host,work_dir,case_name,local_dir):
     #write_perf_file(work_folder, perf_file, ['mpstat','mem','pcie'])
     run_script_remote('root', host, work_dir, perf_file, case_name, False)
 def stop_perf(host):
-    exec_cmd("ssh root@{} killall mpstat pcie pmt sar".format(host))
+    exec_cmd("ssh root@{} killall vasmi mpstat pcie pmt sar".format(host))
 
 workloads={
     #'v_baidu':    ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
@@ -422,5 +422,5 @@ def baidu_cases():
 def modeling_cases():
   test_and_monitor("192.168.20.209","a_resnet50","5")
 
-baidu_cases()
-#modeling_cases()
+#baidu_cases()
+modeling_cases()
