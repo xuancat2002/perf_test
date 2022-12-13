@@ -25,6 +25,6 @@ for i in $(seq 0 $INDEX); do
   else
     echo "./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log last"
           ./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log 2>&1
-  #fi
+  fi
   sleep 1
 done

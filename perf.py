@@ -331,6 +331,7 @@ workloads={
     'v_transcode': ['docker_video.sh','load_video.sh'],
     'a_resnet50':  ['loop_docker_resnet50.sh', 'docker_resnet50.sh'],
     'a_bert':      ['loop_docker_bert.sh',     'docker_bert.sh','load_bert.sh'],
+    'ai_bench':    ['loop_docker_ai_cnn.sh',   'docker_ai_cnn.sh'],
     #'a_yolo':     ['docker_yolo.sh'],
 }
 def send_file_remote(user, ip, file, target_path):
@@ -421,7 +422,8 @@ def baidu_cases():
 
 def modeling_cases():
   #test_and_monitor("192.168.20.209","a_resnet50","5")
-  test_and_monitor("192.168.20.209","a_bert","5")
+  #test_and_monitor("192.168.20.209","a_bert","5")
+  test_and_monitor("192.168.20.209","ai_bench","mobilenet_v2")
 
 #baidu_cases()
 modeling_cases()

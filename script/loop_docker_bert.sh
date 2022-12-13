@@ -19,13 +19,13 @@ fi
 
 for i in $(seq 0 $INDEX); do
   echo "ai card$i"
-  #if [ $i -lt $INDEX ]; then
-  #  echo "./docker_bert.sh $i $NAME $OPT > bert_card$i.$CASE.log 2>&1 &"
-  #        ./docker_bert.sh $i $NAME $OPT > bert_card$i.$CASE.log 2>&1 &
-  #else
+  if [ $i -lt $INDEX ]; then
+    echo "./docker_bert.sh $i $NAME $OPT > bert_card$i.$CASE.log 2>&1 &"
+          ./docker_bert.sh $i $NAME $OPT > bert_card$i.$CASE.log 2>&1 &
+  else
     echo "./docker_bert.sh $i $NAME $OPT > bert_card$i.$CASE.log last"
           ./docker_bert.sh $i $NAME $OPT > bert_card$i.$CASE.log 2>&1
-  #fi
+  fi
   sleep 1
 done
 

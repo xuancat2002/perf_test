@@ -44,6 +44,6 @@ docker run --rm -itd --name ai_card${IDX} \
 sleep 5
 
 docker cp $host_dataset_path/load_bert.sh ai_card${IDX}:$EXEC
-docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./load_bert.sh 30"
-#docker exec ai_card$IDX bash -c "source /etc/profile && cd $EXEC; ./bert_performance.sh 10"
+#docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./load_bert.sh 30"
+docker exec ai_card$IDX bash -c "source /etc/profile && cd $EXEC; ./bert_performance.sh 10"
 #docker exec ai_card$IDX bash -c "source /etc/profile && cd $EXEC; make; ./test -j network_die0.json,network_die1.json"

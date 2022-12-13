@@ -1,6 +1,7 @@
 
 IDX=${1:-0}
-MODE=${2:-mobilenet_v1}
+NAME=${2:-ai_bench}
+MODE=${3:-mobilenet_v1}
 
 ITER=1000000
 PERF=/opt/benchmark/conf/mobilenet/perf
