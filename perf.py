@@ -330,7 +330,7 @@ workloads={
     'v_baidu':     ['loop_docker.sh',       'docker_video.sh','load_video2.sh'],
     'v_transcode': ['docker_video.sh','load_video.sh'],
     'a_resnet50':  ['loop_docker_resnet50.sh', 'docker_resnet50.sh'],
-    'a_bert':      ['docker_bert.sh','load_bert.sh'],
+    'a_bert':      ['loop_docker_bert.sh',     'docker_bert.sh','load_bert.sh'],
     #'a_yolo':     ['docker_yolo.sh'],
 }
 def send_file_remote(user, ip, file, target_path):
@@ -420,7 +420,8 @@ def baidu_cases():
   #plot_metrics('/Users/xuan/Desktop/va1v_BD/script/',"va1v_case1")
 
 def modeling_cases():
-  test_and_monitor("192.168.20.209","a_resnet50","5")
+  #test_and_monitor("192.168.20.209","a_resnet50","5")
+  test_and_monitor("192.168.20.209","a_bert","5")
 
 #baidu_cases()
 modeling_cases()
