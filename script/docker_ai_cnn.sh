@@ -6,6 +6,7 @@ ITER=1000000
 PERF=/opt/benchmark/conf/mobilenet/perf
 
 AI_ImageID="reg.devops.com/base/benchmark:v1.2.2"
+AI_ImageID="8146f5f90780"
 DR_NAME=`rpm -qa|grep vastai-pci`
 if [ "$DR_NAME" = "vastai-pci-sw-v1-1-alpha-hwtype-2-00.22.09.05-1dkms.x86_64" ]; then
   AI_ImageID="744a372861d7"    # perf test image
@@ -15,7 +16,7 @@ elif [ "$DR_NAME" = "vastai-pci-sw-v1-1-alpha-hwtype-2-00.22.09.05-1dkms.x86_64"
   docker_image="192.168.20.143:443/vaststream/vaststream_ubuntu18.04:V_202208220913_f579cfa5_sw_v1_1_alpha"
 fi
 
-list_image_id=`docker images | grep -i $AI_ImageID | awk '{print$3}'`
+list_image_id=`docker images | grep -i $AI_ImageID|head -1 | awk '{print$3}'`
 if [ "$list_image_id" = "$AI_ImageID" ]; then
 	echo "-------------Already load--------------------"
 else
