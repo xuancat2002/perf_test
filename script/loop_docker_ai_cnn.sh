@@ -1,5 +1,14 @@
 CASE=${1:-mobilenet_v1.100000}      # test case
 date
+
+MOD=`lsmod|grep vast|wc -l`
+if  [ $MOD -lt 1 ]; then
+  cd /home/dqj/work3/pcie
+  modprobe drm_kms_helper
+  insmod vastai_pci.ko
+  cd /home/test/dataset
+fi
+
 COUNT=`vasmi summary|grep VA1|wc -l`
 INDEX=$((COUNT-1))
 
@@ -20,14 +29,18 @@ fi
 #./docker_ai_cnn.sh 0 model $OPT > cnn_model.$CASE.log 
 
 for i in $(seq 0 $INDEX); do
-  echo "ai card$i"
-  if [ $i -lt $INDEX ]; then
-  echo "ai card$i"
+    echo "ai card$i"
     echo "./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log 2>&1 &"
           ./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log 2>&1 &
-  else
-    echo "./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log last"
-          ./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log 2>&1
-  fi
   sleep 1
+done
+
+while true; do
+   processor_num=`ps -aux | grep -w "vaTest" | grep -v "grep" | awk '{print $2}' | wc -l`
+   if [ $processor_num -eq 0 ];then
+        killall vaprofiler vasmi mpstat pcie pmt sar 2>/dev/null
+        break
+   else
+       sleep 5
+   fi
 done
