@@ -48,10 +48,12 @@ sleep 5
 
 if [ "$MODE" = "mobilenet_v1" ]; then
   MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-1.json
+  MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-8.json
   docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/mobilenet_v1"
 
 elif [ "$MODE" = "mobilenet_v2" ]; then
   MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
+  MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
   docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/mobilenet_v2"
 
 fi
