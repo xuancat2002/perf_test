@@ -16,15 +16,10 @@ DC=`docker ps|wc -l`
 if [ $DC -gt 1 ]; then
   docker stop `docker ps -aq`
 fi
-
 for i in $(seq 0 $INDEX); do
   echo "ai card$i"
-  if [ $i -lt $INDEX ]; then
     echo "./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log 2>&1 &"
           ./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log 2>&1 &
-  else
-    echo "./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log last"
-          ./docker_ai_cnn.sh $i $NAME $OPT > cnn_card$i.$CASE.log 2>&1
-  fi
   sleep 1
 done
+wait
