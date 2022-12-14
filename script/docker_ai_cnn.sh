@@ -54,12 +54,17 @@ else
   elif [ "$MODE" = "mobilenet_v2" ]; then
     MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
     #MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
+  elif [ "$MODE" = "yolov3" ]; then
+    MODEL=yolov3-ultralytics-onnx-int8-max-640_640-runstream-pipeline-1.json
   elif [ "$MODE" = "yolov5" ]; then
-    MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
-    #MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
+    MODEL=yolov5l-ultralytics-onnx-int8-max-640_640-runstream-pipeline-1.json
   elif [ "$MODE" = "yolov7" ]; then
-    MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
-    #MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
+    MODEL=yolov7-official-torchscript-int8-percentile-640_640-runstream-pipeline-1.json
+  elif [ "$MODE" = "retinaface" ]; then
+    MODEL=retinaface_resnet50-official-torchscript-int8-max-640_640-runstream-pipeline-1.json
+  elif [ "$MODE" = "resnet" ]; then
+    MODEL=resnet50-timm-onnx-fp16-none-224_224-runstream-1.json
+    #MODEL=resnet50-timm-onnx-int8-max-224_224-runstream-8.json
   fi
   docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/$MODE"
   sleep 100
