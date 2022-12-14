@@ -423,7 +423,13 @@ def baidu_cases():
 def modeling_cases():
   #test_and_monitor("192.168.20.209","a_resnet50","5")
   #test_and_monitor("192.168.20.209","a_bert","5")
+  test_and_monitor("192.168.20.209","ai_bench","mobilenet_v1")
   test_and_monitor("192.168.20.209","ai_bench","mobilenet_v2")
+  test_and_monitor("192.168.20.209","ai_bench","resnet")
+  test_and_monitor("192.168.20.209","ai_bench","retinaface")
+  test_and_monitor("192.168.20.209","ai_bench","yolov3")
+  test_and_monitor("192.168.20.209","ai_bench","yolov5")
+  test_and_monitor("192.168.20.209","ai_bench","yolov7")
 
 #baidu_cases()
 modeling_cases()
