@@ -17,6 +17,7 @@ if [ $DC -gt 1 ]; then
   docker stop `docker ps -aq`
 fi
 
+#./docker_ai_cnn.sh 0 model $OPT > cnn_model.$CASE.log 
 
 for i in $(seq 0 $INDEX); do
   echo "ai card$i"

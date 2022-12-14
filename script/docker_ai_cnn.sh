@@ -45,23 +45,28 @@ docker run --rm -itd --name ai_card${IDX} \
 sleep 5
 
 #docker run --rm -itd --name bm0 --net=host --runtime=vastai -e VASTAI_VISIBLE_DEVICES=0 -v /etc/localtime:/etc/localtime -v /opt/data:/opt/data reg.devops.com/base/benchmark:v1.2.2
+if [ "$NAME" = "model" ]; then
+  docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/$MODE"
+else
+  if [ "$MODE" = "mobilenet_v1" ]; then
+    MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-1.json
+    #MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-8.json
+  elif [ "$MODE" = "mobilenet_v2" ]; then
+    MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
+    #MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
+  elif [ "$MODE" = "yolov5" ]; then
+    MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
+    #MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
+  elif [ "$MODE" = "yolov7" ]; then
+    MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
+    #MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
+  fi
+  docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/$MODE"
+  sleep 100
 
-if [ "$MODE" = "mobilenet_v1" ]; then
-  MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-1.json
-  MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-8.json
-  docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/mobilenet_v1"
-
-elif [ "$MODE" = "mobilenet_v2" ]; then
-  MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-1.json
-  MODEL=mobilenet_v2-timm-onnx-int8-percentile-224_224-runstream-8.json
-  docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/mobilenet_v2"
+  DIE0=$((2*IDX))
+  DIE1=$((2*IDX+1))
+  docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d $DIE0 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch 1" &
+  docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d $DIE1 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch 1"
 
 fi
-
-DIE0=$((2*IDX))
-DIE1=$((2*IDX+1))
-docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d $DIE0 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch 1" &
-docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d $DIE1 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch 1"
-
-#docker cp $host_dataset_path/load_bert.sh ai_card${IDX}:$EXEC
-#docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./load_bert.sh 30"
