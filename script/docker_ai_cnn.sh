@@ -58,7 +58,10 @@ elif [ "$MODE" = "mobilenet_v2" ]; then
 
 fi
 
-docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d 0 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch 1"
+DIE0=$((2*IDX))
+DIE1=$((2*IDX+1))
+docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d $DIE0 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch 1" &
+docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d $DIE1 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch 1"
 
 #docker cp $host_dataset_path/load_bert.sh ai_card${IDX}:$EXEC
 #docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./load_bert.sh 30"
