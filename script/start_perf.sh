@@ -9,7 +9,7 @@ DIR="logs/$CARD"
 killall vaprofiler vasmi mpstat pcie mem sar
 sleep 5
 
-NAME=`echo $CASE | awk -F. '{print $1}'`
+NAME=`echo $CARD | awk -F. '{print $1}'`
 
 FC=`ls /data|wc -l`
 if [ $FC -lt 1 ]; then
@@ -26,7 +26,7 @@ if [ "$NAME" = "ai_bench" ]; then
     cd /home/test/dataset
   fi
 else
-  echo "no predefined driver, exit!"
+  echo "no predefined driver for $NAME, exit!"
   exit
 fi
 
