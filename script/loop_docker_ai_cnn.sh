@@ -57,7 +57,7 @@ while true; do
    processor_num=`ps -aux | grep -w "vaTest" | grep -v "grep" | awk '{print $2}' | wc -l`
    if [ $processor_num -eq 0 ];then
         sleep 10
-        killall vaprofiler vasmi mpstat pcie pmt sar 2>/dev/null
+        killall vaprofiler vasmi mpstat pcie mem sar 2>/dev/null
         break
    else
        sleep 10
