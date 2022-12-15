@@ -6,6 +6,18 @@ cd $SCRIPTPATH
 CARD=${1:-va1v_ai0}
 DIR="logs/$CARD"
 
+sleep 5
+while true; do
+   MOD=`lsmod|grep vast|wc -l`
+   if  [ $MOD -lt 1 ]; then
+     sleep 5
+   else
+     break
+   fi
+done
+
+BIN=/data/tools/pmt
+
 mkdir -p $DIR
 PCIE=`lspci|grep acc|awk '{print $1}'| tr '\n' ','`
 CNT=`lspci|grep acc|wc -l`

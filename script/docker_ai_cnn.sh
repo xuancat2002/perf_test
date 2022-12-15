@@ -4,6 +4,7 @@ NAME=${2:-ai_bench}
 MODE=${3:-mobilenet_v1}
 BS=${4:-1}
 ITER=1000000
+ITER=100000
 MD=`echo $MODE | awk -F_ '{print $1}'`
 PERF="/opt/benchmark/conf/$MD/perf"
 

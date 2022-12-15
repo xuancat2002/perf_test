@@ -350,7 +350,7 @@ def run_script_remote(user, ip, path, file, opt, wait=True):
     if wait:
         cmd="ssh {}@{} 'cd {}; ./{} {}'".format(user, ip, path, file, opt)
     else:
-        cmd = "ssh {}@{} 'cd {}; ./{} {}' &".format(user, ip, path, file, opt)
+        cmd="ssh {}@{} 'cd {}; ./{} {}' &".format(user, ip, path, file, opt)
     print(cmd)
     out=exec_cmd(cmd)
     print(out)
@@ -423,6 +423,7 @@ def baidu_cases():
 def modeling_cases():
   #test_and_monitor("192.168.20.209","a_resnet50","5")
   #test_and_monitor("192.168.20.209","a_bert","5")
+
   test_and_monitor("192.168.20.209","ai_bench","mobilenet_v1")
   test_and_monitor("192.168.20.209","ai_bench","mobilenet_v2")
   test_and_monitor("192.168.20.209","ai_bench","resnet")
