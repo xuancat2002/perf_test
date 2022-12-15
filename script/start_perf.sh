@@ -6,6 +6,9 @@ cd $SCRIPTPATH
 CARD=${1:-ai_bench.yolov7}
 DIR="logs/$CARD"
 
+killall vaprofiler vasmi mpstat pcie mem sar
+sleep 5
+
 NAME=`echo $CASE | awk -F. '{print $1}'`
 
 FC=`ls /data|wc -l`
