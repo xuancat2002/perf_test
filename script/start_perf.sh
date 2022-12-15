@@ -3,7 +3,7 @@ SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 cd $SCRIPTPATH
 
-CARD=${1:-va1v_ai0}
+CARD=${1:-ai_bench.yolov7}
 DIR="logs/$CARD"
 
 sleep 5
@@ -15,6 +15,12 @@ while true; do
      break
    fi
 done
+
+FC=`ls /data|wc -l`
+if [ $FC -lt 1 ]; then
+  mount -t nfs 192.168.20.2:/nfs/sedata /data
+  # cp -r /data/perf_test/ai_dataset/2012img /home/test/dataset/
+fi
 
 BIN=/data/tools/pmt
 
