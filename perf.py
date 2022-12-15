@@ -351,9 +351,9 @@ def run_script_remote(user, ip, path, file, opt, wait=True):
         cmd="ssh {}@{} 'cd {}; ./{} {}'".format(user, ip, path, file, opt)
     else:
         cmd="ssh {}@{} 'cd {}; ./{} {}' &".format(user, ip, path, file, opt)
-    print(cmd)
+    print(cmd, flush=True)
     out=exec_cmd(cmd)
-    print(out)
+    print(out, flush=True)
     #time.sleep(10)
 def write_docker_file(folder, script_file, workload="video"):
     exec_cmd("mkdir -p {}".format(folder))
