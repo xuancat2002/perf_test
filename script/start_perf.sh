@@ -6,20 +6,25 @@ cd $SCRIPTPATH
 CARD=${1:-ai_bench.yolov7}
 DIR="logs/$CARD"
 
-sleep 5
-while true; do
-   MOD=`lsmod|grep vast|wc -l`
-   if  [ $MOD -lt 1 ]; then
-     sleep 5
-   else
-     break
-   fi
-done
+NAME=`echo $CASE | awk -F. '{print $1}'`
 
 FC=`ls /data|wc -l`
 if [ $FC -lt 1 ]; then
   mount -t nfs 192.168.20.2:/nfs/sedata /data
   # cp -r /data/perf_test/ai_dataset/2012img /home/test/dataset/
+fi
+
+if [ "$NAME" = "ai_bench" ]; then
+  MOD=`lsmod|grep vast|wc -l`
+  if  [ $MOD -lt 1 ]; then
+    modprobe drm_kms_helper
+    cd /data/driver/ai_new/pcie
+    insmod vastai_pci.ko
+    cd /home/test/dataset
+  fi
+else
+  echo "no predefined driver, exit!"
+  exit
 fi
 
 BIN=/data/tools/pmt
