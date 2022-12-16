@@ -4,7 +4,7 @@ NAME=${2:-ai_bench}
 MODE=${3:-mobilenet_v1}
 BS=${4:-1}
 
-PROC=3
+PROC=1
 ITER=100000
 MD=`echo $MODE | awk -F_ '{print $1}'`
 PERF="/opt/benchmark/conf/$MD/perf"
@@ -54,31 +54,32 @@ else
   if [ "$MODE" = "mobilenet_v1" ]; then
     MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-8.json
     MODEL=mobilenet_v1-keras-keras-int8-max-224_224-runstream-34.json
-    ITER=1000000  # default*10
+    ITER=$((5*ITER))  # default*5
+    PROC=$((4*PROC))
   elif [ "$MODE" = "mobilenet_v2" ]; then
     MODEL=mobilenet_v2-timm-onnx-fp16-none-224_224-runstream-5.json
     MODEL=mobilenet_v2-timm-onnx-int8-max-224_224-runstream-20.json
-    ITER=1000000  # default*10
-  elif [ "$MODE" = "yolov3" ]; then
-    MODEL=yolov3-ultralytics-onnx-fp16-none-640_640-runstream-pipeline-1.json
-    MODEL=yolov3-ultralytics-onnx-int8-max-640_640-runstream-pipeline-1.json
-    #ITER=1000000  # default*10
-  elif [ "$MODE" = "yolov5" ]; then
-    MODEL=yolov5l-ultralytics-onnx-fp16-none-640_640-runstream-pipeline-1.json
-    MODEL=yolov5l-ultralytics-onnx-int8-max-640_640-runstream-pipeline-2.json
-    #ITER=1000000  # default*10
-  elif [ "$MODE" = "yolov7" ]; then
-    MODEL=yolov7-official-torchscript-fp16-none-640_640-runstream-pipeline-1.json
-    MODEL=yolov7-official-torchscript-int8-max-640_640-runstream-pipeline-1.json
-    #ITER=1000000  # default*10
+    ITER=$((5*ITER))  # default*5
+    PROC=$((4*PROC))
   elif [ "$MODE" = "retinaface" ]; then
     MODEL=retinaface_resnet50-official-torchscript-fp16-none-640_640-runstream-pipeline-1.json
     MODEL=retinaface_resnet50-official-torchscript-int8-max-640_640-runstream-pipeline-2.json
-    #ITER=1000000  # default*10
+    ITER=$((2*ITER))  # default*5
+    PROC=$((2*PROC))
   elif [ "$MODE" = "resnet" ]; then
     MODEL=resnet50-timm-onnx-fp16-none-224_224-runstream-10.json
     MODEL=resnet50-timm-onnx-int8-max-224_224-runstream-27.json
-    #ITER=1000000  # default*10
+    ITER=$((5*ITER))  # default*5
+    PROC=$((2*PROC))
+  elif [ "$MODE" = "yolov3" ]; then
+    MODEL=yolov3-ultralytics-onnx-fp16-none-640_640-runstream-pipeline-1.json
+    MODEL=yolov3-ultralytics-onnx-int8-max-640_640-runstream-pipeline-1.json
+  elif [ "$MODE" = "yolov5" ]; then
+    MODEL=yolov5l-ultralytics-onnx-fp16-none-640_640-runstream-pipeline-1.json
+    MODEL=yolov5l-ultralytics-onnx-int8-max-640_640-runstream-pipeline-2.json
+  elif [ "$MODE" = "yolov7" ]; then
+    MODEL=yolov7-official-torchscript-fp16-none-640_640-runstream-pipeline-1.json
+    MODEL=yolov7-official-torchscript-int8-max-640_640-runstream-pipeline-1.json
   fi
   docker exec ai_card$IDX bash -c "source /etc/profile; cd /opt/benchmark; python3 main.py -m /opt/data/v1.2.2/$MODE"
   sleep 100
