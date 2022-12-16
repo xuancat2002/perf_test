@@ -54,11 +54,11 @@ else
   if [ "$MODE" = "mobilenet_v1" ]; then
     MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-8.json
     MODEL=mobilenet_v1-keras-keras-int8-max-224_224-runstream-34.json
-    #ITER=1000000  # default*10
+    ITER=1000000  # default*10
   elif [ "$MODE" = "mobilenet_v2" ]; then
     MODEL=mobilenet_v2-timm-onnx-fp16-none-224_224-runstream-5.json
     MODEL=mobilenet_v2-timm-onnx-int8-max-224_224-runstream-20.json
-    #ITER=1000000  # default*10
+    ITER=1000000  # default*10
   elif [ "$MODE" = "yolov3" ]; then
     MODEL=yolov3-ultralytics-onnx-fp16-none-640_640-runstream-pipeline-1.json
     MODEL=yolov3-ultralytics-onnx-int8-max-640_640-runstream-pipeline-1.json
