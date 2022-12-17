@@ -55,12 +55,12 @@ else
     MODEL=mobilenet_v1-keras-keras-fp16-none-224_224-runstream-8.json
     MODEL=mobilenet_v1-keras-keras-int8-max-224_224-runstream-34.json
     ITER=$((5*ITER))  # default*5
-    PROC=$((4*PROC))
+    PROC=$((2*PROC))
   elif [ "$MODE" = "mobilenet_v2" ]; then
     MODEL=mobilenet_v2-timm-onnx-fp16-none-224_224-runstream-5.json
     MODEL=mobilenet_v2-timm-onnx-int8-max-224_224-runstream-20.json
     ITER=$((5*ITER))  # default*5
-    PROC=$((4*PROC))
+    PROC=$((2*PROC))
   elif [ "$MODE" = "retinaface" ]; then
     MODEL=retinaface_resnet50-official-torchscript-fp16-none-640_640-runstream-pipeline-1.json
     MODEL=retinaface_resnet50-official-torchscript-int8-max-640_640-runstream-pipeline-2.json
