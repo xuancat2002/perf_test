@@ -35,9 +35,9 @@ echo "$NODE" > /sys/fs/cgroup/cpuset/numanode$NODE/cpuset.mems
 docker run --rm -itd --name ai_card${IDX} \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
-  -v /data/ai_video/:/opt/vastai/vaststream/release/samples/datasets \
+  -v /opt/ai_video/:/opt/vastai/vaststream/release/samples/datasets \
   ${AI_ImageID} /bin/bash
 sleep 5
 
 docker cp run_de.sh ai_card$IDX:$EXEC
-docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./run_de.sh $LOOP $MODE n" &
+docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./run_de.sh $LOOP $MODE y" &

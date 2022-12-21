@@ -47,7 +47,7 @@ done
 sleep 30
 
 while true; do
-   processor_num=`ps -aux | grep -w test | grep -v "grep" | awk '{print $2}' | wc -l`
+   processor_num=`ps -aux | grep -w test | grep -v grep |grep -v loop_docker_ai_video.sh | awk '{print $2}' | wc -l`
    if [ $processor_num -eq 0 ];then
         sleep 10
         killall vaprofiler vasmi mpstat pcie mem sar 2>/dev/null
