@@ -38,8 +38,5 @@ docker run --rm -itd --name ai_card${IDX} \
   ${AI_ImageID} /bin/bash
 sleep 5
 
-
-docker exec ai_card$IDX bash -c "source /etc/profile; $EXEC/run_de.sh" &
-  
-
-#docker exec ai_card$IDX bash -c "source /etc/profile; /opt/vaststream/tool/vaTest -d $DIE1 -b 100 -v 1 -p -1 -i $ITER -j $PERF/$MODEL --batch $BS"
+docker cp run_de.sh ai_card$IDX:$EXEC
+docker exec ai_card$IDX bash -c "source /etc/profile; $EXEC/run_de.sh 1 n" &
