@@ -50,8 +50,11 @@ while true; do
    processor_num=`ps -aux | grep -w test | grep -v grep |grep -v loop_docker_ai_video.sh | awk '{print $2}' | wc -l`
    if [ $processor_num -eq 0 ];then
         sleep 10
-        killall vaprofiler vasmi mpstat pcie mem sar 2>/dev/null
-        break
+        inner_sleep_n=`ps -ef|grep -v grep|grep 'sleep 30'|wc -l`
+        if [ $inner_sleep_n -eq  ];then
+            killall vaprofiler vasmi mpstat pcie mem sar 2>/dev/null
+            break
+        fi
    else
        sleep 10
    fi
