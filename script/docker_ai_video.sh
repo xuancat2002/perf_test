@@ -1,7 +1,8 @@
 
 IDX=${1:-0}
-NAME=${2:-ai_bench}
-MODE=${3:-deblur}  # deblur/deart
+NAME=${2:-ai_video}
+MODE=${3:-deblur}  # deblur/deart/all
+LOOP=${4:-1}
 
 AI_ImageID="96f8d416379f"
 DR_NAME=`rpm -qa|grep vastai-pci`
@@ -34,9 +35,9 @@ echo "$NODE" > /sys/fs/cgroup/cpuset/numanode$NODE/cpuset.mems
 docker run --rm -itd --name ai_card${IDX} \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
-  -v /opt/ai_video/:/opt/vastai/vaststream/release/samples/datasets \
+  -v /data/ai_video/:/opt/vastai/vaststream/release/samples/datasets \
   ${AI_ImageID} /bin/bash
 sleep 5
 
 docker cp run_de.sh ai_card$IDX:$EXEC
-docker exec ai_card$IDX bash -c "source /etc/profile; $EXEC/run_de.sh 1 n" &
+docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./run_de.sh $LOOP $MODE n" &

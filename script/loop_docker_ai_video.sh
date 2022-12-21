@@ -1,11 +1,11 @@
-CASE=${1:-deblur.1}      # test case
+CASE=${1:-ai_video.deblur_1}      # test case
 
 date
 echo "entering benchmark"
 
 NAME=`echo $CASE | awk -F. '{print $1}'`
 OPT=`echo $CASE | awk -F. '{print $2}'`
-#PARAM=`echo $OPT | sed 's/_/ /g'`
+PARAM=`echo $OPT | sed 's/_/ /g'`
 
 FC=`ls /data|wc -l`
 if [ $FC -lt 1 ]; then
@@ -26,7 +26,7 @@ if  [ $MOD -lt 1 ]; then
   rpm -ivh /data/ai_video/vastai-pci-d2-0-v1-1-a1-1-ks-facesr-hwtype-0_00.22.12.15_x86_64.rpm
 fi
 
-COUNT=`vasmi summary|grep VA1|wc -l`
+COUNT=`/data/tools/pmt/vasmi summary|grep VA1|wc -l`
 INDEX=$((COUNT-1))
 
 DC=`docker ps|wc -l`
@@ -39,8 +39,8 @@ echo "starting benchmark"
 
 for i in $(seq 0 $INDEX); do
     echo "ai card$i"
-    echo "./docker_ai_video.sh $i $NAME $OPT > av_card$i.$CASE.log 2>&1 &"
-          ./docker_ai_video.sh $i $NAME $OPT > av_card$i.$CASE.log 2>&1 &
+    echo "./docker_ai_video.sh $i $NAME $PARAM > av_card$i.$CASE.log 2>&1 &"
+          ./docker_ai_video.sh $i $NAME $PARAM > av_card$i.$CASE.log 2>&1 &
   sleep 1
 done
 
