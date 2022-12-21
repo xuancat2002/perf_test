@@ -26,8 +26,11 @@ if [ "$NAME" = "ai_bench" ]; then
     cd /home/test/dataset
   fi
 else
-  echo "no predefined driver for $NAME, exit!"
-  exit
+  MOD=`lsmod|grep vast|wc -l`
+  if  [ $MOD -lt 1 ]; then
+    echo "no predefined driver for $NAME, exit!"
+    exit
+  fi
 fi
 
 BIN=/data/tools/pmt
