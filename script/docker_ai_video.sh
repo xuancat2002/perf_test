@@ -43,4 +43,4 @@ sleep 5
 
 docker cp run_de.sh ai_card$IDX:$EXEC
 docker cp run_de_perf.sh ai_card$IDX:$EXEC
-docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./run_de.sh $LOOP $MODE y" &
+docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./run_de.sh $LOOP $MODE n" &

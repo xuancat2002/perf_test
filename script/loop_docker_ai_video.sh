@@ -38,6 +38,7 @@ DC=`docker ps|wc -l`
 if [ $DC -gt 1 ]; then
   docker stop `docker ps -aq`
 fi
+sleep 10
 
 date 
 echo "starting benchmark"
