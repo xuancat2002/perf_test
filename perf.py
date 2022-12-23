@@ -336,7 +336,7 @@ workloads={
     'a_resnet50':  ['loop_docker_resnet50.sh', 'docker_resnet50.sh'],
     'a_bert':      ['loop_docker_bert.sh',     'docker_bert.sh','load_bert.sh'],
     'ai_bench':    ['loop_docker_ai_cnn.sh',   'docker_ai_cnn.sh'],
-    'ai_video':    ['loop_docker_ai_video.sh', 'docker_ai_video.sh', 'run_de.sh'],
+    'ai_video':    ['loop_docker_ai_video.sh', 'docker_ai_video.sh', 'run_de.sh', 'run_de_perf.sh'],
 }
 def send_file_remote(user, ip, file, target_path):
     cmd = "scp {} {}@{}:{}".format(file, user, ip, target_path)
