@@ -140,8 +140,11 @@ def plot_cpu(folder,card,index):
     #print(data_cpu.head())
     data_cpu.insert(0, 'index', range(1, 1 + len(data_cpu)))
     data_cpu[["%idle"]] = data_cpu[["%idle"]].apply(pd.to_numeric)
-    line1 = go.Scatter(x=data_cpu['index'], y=100-data_cpu['%idle'], name='cpu_idle')
-    fig = go.Figure([line1])
+    total = go.Scatter(x=data_cpu['index'], y=100-data_cpu['%idle'], name='total')
+    sys = go.Scatter(x=data_cpu['index'], y=data_cpu['%sys'], name='sys')
+    iowait = go.Scatter(x=data_cpu['index'], y=data_cpu['%iowait'], name='iowait')
+    irq = go.Scatter(x=data_cpu['index'], y=data_cpu['%irq'], name='irq')
+    fig = go.Figure([total,sys,iowait,irq])
     fig.update_layout(
             title=card + " cpu_"+index+"%",
             # xaxis_title="Index",
