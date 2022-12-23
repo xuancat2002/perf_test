@@ -172,6 +172,7 @@ def plot_vastai_dmon(folder,card):
         exec_cmd("echo 'aic/die   pwr(W)   temp(C)   %mem   oclk(MHz)   dclk(MHz)   eclk(MHz)     %ai    %dec    %enc' > tmp.csv")
         exec_cmd("grep {} {} |grep -v '<' >> tmp.csv".format(chip, file))
         data1 = pd.read_csv("tmp.csv",delim_whitespace=True)
+        data1=data1.iloc[::2]
         data1.insert(0, 'index', range(1, 1 + len(data1)))
         data1["pwr(W)"] = pd.to_numeric(data1["pwr(W)"], errors='coerce')
         data1["temp(C)"] = pd.to_numeric(data1["temp(C)"], errors='coerce')
