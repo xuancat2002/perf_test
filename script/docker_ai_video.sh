@@ -22,8 +22,10 @@ else
 	#docker pull $docker_image
 	docker load -i $docker_image
 fi
-host_dataset_path=/opt/ai_video/
+#host_dataset_path=/opt/ai_video/
+host_dataset_path=/opt/ai_video_tmp/
 EXEC=/opt/vastai/vaststream/release/samples/common/   # run_de.sh
+DATA=/opt/vastai/vaststream/release/samples/datasets
 NIDX=$((IDX+1))
 PCI_N=`lspci|grep accelerators | sed -n ${NIDX}p|awk '{print $1}'`
 NODE=`cat /sys/bus/pci/devices/0000:$PCI_N/numa_node`
@@ -35,7 +37,7 @@ echo "$NODE" > /sys/fs/cgroup/cpuset/numanode$NODE/cpuset.mems
 docker run --rm -itd --name ai_card${IDX} \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
-  -v /opt/ai_video/:/opt/vastai/vaststream/release/samples/datasets \
+  -v $host_dataset_path:$DATA \
   ${AI_ImageID} /bin/bash
 sleep 5
 

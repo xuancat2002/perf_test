@@ -13,12 +13,16 @@ if [ $FC -lt 1 ]; then
   # cp -r /data/perf_test/ai_dataset/2012img /home/test/dataset/
 fi
 
-TMP=`mount |grep tmpfs|grep $OUT|wc -l`
+DATA=/opt/ai_video_tmp
+TMP=`mount |grep tmpfs|grep $DATA|wc -l`
 if [ $TMP -gt 0 ]; then
-   echo tmpfs on $OUT
+   echo tmpfs on $DATA
 else
-   #mount -t tmpfs -o size=100g tempfs $OUT
-   echo "mount tmpfs"
+   mount -t tmpfs -o size=100g tempfs $DATA
+   #cp -r /opt/ai_video/deart_data      /opt/ai_video_tmp/   # 2s
+   #cp -r /opt/ai_video/deblur_datasets /opt/ai_video_tmp/   # 100s
+   cp -r /data/ai_video/deart_data      /opt/ai_video_tmp/
+   cp -r /data/ai_video/deblur_datasets /opt/ai_video_tmp/
 fi
 
 MOD=`lsmod|grep vast|wc -l`
@@ -49,9 +53,9 @@ sleep 30
 while true; do
    processor_num=`ps -aux | grep -w test | grep -v grep |grep -v loop_docker_ai_video.sh | awk '{print $2}' | wc -l`
    if [ $processor_num -eq 0 ];then
-        sleep 10
-        inner_sleep_n=`ps -ef|grep -v grep|grep 'sleep 30'|wc -l`
-        if [ $inner_sleep_n -eq  ];then
+        sleep 35
+        processor_num=`ps -aux | grep -w test | grep -v grep |grep -v loop_docker_ai_video.sh | awk '{print $2}' | wc -l`
+        if [ $processor_num -eq 0 ];then
             killall vaprofiler vasmi mpstat pcie mem sar 2>/dev/null
             break
         fi
