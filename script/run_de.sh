@@ -110,7 +110,7 @@ starttime=`date +%s%3N`
           echo this round $j $json_name have mismatch, please check >> test_result_fail.txt
         fi
       fi
-   sleep 30
+   sleep 55
    done
    run_result=`cat test_result_all.txt | grep "console"`
    if [ "$run_result" != "" ]; then

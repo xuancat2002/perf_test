@@ -18,6 +18,7 @@ TMP=`mount |grep tmpfs|grep $DATA|wc -l`
 if [ $TMP -gt 0 ]; then
    echo tmpfs on $DATA
 else
+   mkdir -p /opt/ai_video_tmp
    mount -t tmpfs -o size=100g tempfs $DATA
    #cp -r /opt/ai_video/deart_data      /opt/ai_video_tmp/   # 2s
    #cp -r /opt/ai_video/deblur_datasets /opt/ai_video_tmp/   # 100s
@@ -53,7 +54,7 @@ sleep 30
 while true; do
    processor_num=`ps -aux | grep -w test | grep -v grep |grep -v loop_docker_ai_video.sh | awk '{print $2}' | wc -l`
    if [ $processor_num -eq 0 ];then
-        sleep 35
+        sleep 66
         processor_num=`ps -aux | grep -w test | grep -v grep |grep -v loop_docker_ai_video.sh | awk '{print $2}' | wc -l`
         if [ $processor_num -eq 0 ];then
             killall vaprofiler vasmi mpstat pcie mem sar 2>/dev/null
