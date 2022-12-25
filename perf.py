@@ -9,6 +9,47 @@
 import time, subprocess, pandas as pd
 import plotly.graph_objects as go
 
+def plot_disk(folder,card):
+    file=folder+'/'+card+'/disk.csv'
+    output = exec_cmd("head -20 {}|grep -v DEV|grep -v Linux |awk '{{print $3}}'|sort|uniq".format(file))
+    disk_array=output.split('\n')
+    disk_array = [x for x in disk_array if not x.startswith('dev253')]
+    data = pd.read_csv(file, header=[1], delim_whitespace=True)
+    pd.set_option('display.max_columns', 500)
+    pd.set_option('display.max_rows', 500)
+    pd.set_option('display.expand_frame_repr', False)
+    data.drop(data[data['%util'] == '%util'].index, inplace=True)
+    data[["%util"]] = data[["%util"]].apply(pd.to_numeric)
+    data[["rkB/s"]] = data[["rkB/s"]].apply(pd.to_numeric)
+    data[["wkB/s"]] = data[["wkB/s"]].apply(pd.to_numeric)
+    # data["%util"] = pd.to_numeric(data["%util"], errors='coerce')
+    all_lines = []
+    for disk in disk_array:
+        # tps     rkB/s     wkB/s   areq-sz    aqu-sz     await     svctm     %util
+        data1 = data[(data["DEV"] == disk)].copy()
+        data1.insert(0, 'index', range(1, 1+len(data1)))
+        util=go.Scatter(x=data1['index'], y=data1['%util'], name=disk+'%util')
+        tps =go.Scatter(x=data1['index'], y=data1['tps'],   name=disk+'.tps')
+        rd = go.Scatter(x=data1['index'], y=data1['rkB/s']/1000, name=disk+'.readMB')
+        wt = go.Scatter(x=data1['index'], y=data1['wkB/s']/1000, name=disk+'.writeMB')
+        all_lines.append(util)
+        all_lines.append(tps)
+        all_lines.append(rd)
+        all_lines.append(wt)
+
+    fig = go.Figure(all_lines)
+    fig.update_layout(
+            title=card + " disk%",
+            title_font_size=20,
+            # xaxis_title="Index",
+            # yaxis_title="Performance Trends"
+            # font_family="Courier New",
+            # font_color="blue",
+            # title_font_family="Times New Roman",
+            # title_font_color="red",
+            #legend_title_font_color="green"
+        )
+    fig.write_html(folder+'/'+card+"/disk.html")
 def plot_mem(folder,card):
     data = pd.read_csv(folder+'/'+card+'/mem.csv', header=[0,1])
     data.columns = data.columns.map(''.join)
@@ -279,13 +320,15 @@ def plot_vastai_dmon(folder,card):
 def plot_metrics(path,card):
     #plot_pcie(path,card)
     #plot_mem(path,card)
+    plot_disk(path,card)
     plot_vastai_dmon(path,card)
     plot_pcie_pmt(path,card)
     plot_mem_pmt(path,card)
     plot_cpu(path,card,'all')
-    plot_cpu(path,card,'0')
+    #plot_cpu(path,card,'0')
     #exec_cmd("mv perf.log results/{}/".format(card))
     exec_cmd("rm -rf results/{}.tgz".format(card))
+    time.sleep(2)
     exec_cmd("tar zcf results/{}.tgz results/{}".format(card,card))
 
 def plot_va1v():
