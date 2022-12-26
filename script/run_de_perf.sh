@@ -7,8 +7,8 @@ node=`echo ${nodes} | cut -d " " -f 2`
 node2=`echo ${node: -1}`
 json_file=$1
 batchsize=$2
-performancefile=$3
-devID=`ls /dev | grep kchar | cut -d ':' -f 2`
+#performancefile=${3:-profiler.log}
+#devID=`ls /dev | grep kchar | cut -d ':' -f 2`
 #/opt/vastai/vaststream/release/samples/common/vaprofiler -f -d ${devID} > $performancefile &
 for i in {0..4}; do
 	if [ "`echo $json_file | grep de`" != "" ]; then 
