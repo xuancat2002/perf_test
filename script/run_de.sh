@@ -1,7 +1,6 @@
 #!/bin/bash
 count=${1:-1}
 mode=${2:-deart}  # deart/deblur/all
-issave=${3:-n}
 
 if [ "$mode" = "all" ]; then
   json_file=`ls json_file/*.json`
@@ -31,8 +30,6 @@ node2=`echo ${node##*vacc}`
 
 mkdir deblur_results
 mkdir deart_results
-
-
 
 function check_performance()
 {
@@ -86,14 +83,12 @@ starttime=`date +%s%3N`
    do
       json_name=`echo $(basename $file .json)`
        start=`date +%s%3N`
-       if [ "$issave" == 'y' ]; then
+
            #mkdir -p performance/$j
            #./run_de_perf.sh $file 1 ./performance/$j/$json_name"_performance.txt" | tee current_test_round$j/$json_name".txt"
-           ./run_de_perf.sh $file 1 /dev/null 
+           ./run_de_perf.sh $file 1
            #check_performance ./performance/$j/$json_name"_performance.txt" $j $file
-       else
-           ./run_de_perf.sh $file 1 
-       fi
+
        end=`date +%s%3N`
        totaltime=`expr $end - $start`
       echo Execution ${json_name}_${j} need time was $totaltime million seconds >> timelog.txt
