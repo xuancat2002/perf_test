@@ -89,10 +89,10 @@ starttime=`date +%s%3N`
        if [ "$issave" == 'y' ]; then
            #mkdir -p performance/$j
            #./run_de_perf.sh $file 1 ./performance/$j/$json_name"_performance.txt" | tee current_test_round$j/$json_name".txt"
-           ./run_de_perf.sh $file 1 /dev/null | tee current_test_round$j/$json_name".txt"
+           ./run_de_perf.sh $file 1 /dev/null 
            #check_performance ./performance/$j/$json_name"_performance.txt" $j $file
        else
-           ./run_de_perf.sh $file 1 | tee current_test_round$j/$json_name".txt"
+           ./run_de_perf.sh $file 1 
        fi
        end=`date +%s%3N`
        totaltime=`expr $end - $start`
