@@ -31,8 +31,7 @@ node2=`echo ${node##*vacc}`
 mkdir deblur_results
 mkdir deart_results
 
-function check_performance()
-{
+function check_performance() {
    sum0=$(grep -rni "ai_util" $1 | awk '{if($3 !="0.00%" )print $3}'  |awk 'NR>2{print $0}' | awk 'NR>1{print line}{line=$0}' | awk 'NR>1{print line}{line=$0}' | awk 'NR%2==1{sum+=$0} END {print sum}')
    line0=$(grep -rni "ai_util" $1 | awk '{if($3 !="0.00%" )print $3}' |awk 'NR>2{print $0}' | awk 'NR>1{print line}{line=$0}' | awk 'NR>1{print line}{line=$0}' | awk 'NR%2==1' | wc -l)
    sum1=$(grep -rni "ai_util" $1 | awk '{if($3 !="0.00%" )print $3}'  |awk 'NR>2{print $0}' | awk 'NR>1{print line}{line=$0}' | awk 'NR>1{print line}{line=$0}' | awk 'NR%2==0{sum+=$0} END {print sum}')
@@ -41,7 +40,7 @@ function check_performance()
    avg1=$(echo "$sum1 $line1" | awk '{printf("%.5f", $1/$2)}')
    echo "die0: sum =" $sum0 " line = " $line0 " avg = " $avg0
    echo "die1: sum =" $sum1 " line = " $line1 " avg = " $avg1
-   if [ `echo "$avg0 > 90.0"|bc` -eq 1 ] && [ `echo "$avg1 > 90.0"|bc` -eq 1 ];then
+   if [ `echo "$avg0 > 90.0"|bc` -eq 1 ] && [ `echo "$avg1 > 90.0"|bc` -eq 1 ]; then
       echo "*******************************************" >>test_result_all.txt
       echo  the network is $3, this round $2 are pass ,all of the ai_util are full,the die0 is $"$avg0", the die1 is "$avg1"   >> test_result_all.txt
       echo "*******************************************" >> test_result_all.txt
@@ -53,8 +52,7 @@ function check_performance()
 }
 
 <<ACC
-for file in ${json_file[@]}
-do 
+for file in ${json_file[@]}; do 
 	./test -d $node1 -b 21  --batch 1 -j $file -v 0  
 	wait
         json_name=`echo $(basename $file .json)`
@@ -74,26 +72,24 @@ do
 done
 ACC
 #<<EOF
-for j in $(seq 1 $count)
-do
+for j in $(seq 1 $count); do
 starttime=`date +%s%3N`
 #  echo "round$j starttime: `date +"%Y-%m-%d %H:%M:%S"`" >> time.txt
   mkdir current_test_round$j
-  for file in ${json_file[@]}
-   do
+  for file in ${json_file[@]}; do
       json_name=`echo $(basename $file .json)`
        start=`date +%s%3N`
 
            #mkdir -p performance/$j
            #./run_de_perf.sh $file 1 ./performance/$j/$json_name"_performance.txt" | tee current_test_round$j/$json_name".txt"
-           ./run_de_perf.sh $file 1
+           ./run_de_perf.sh $file 1 > /dev/null 2>&1
            #check_performance ./performance/$j/$json_name"_performance.txt" $j $file
 
        end=`date +%s%3N`
        totaltime=`expr $end - $start`
       echo Execution ${json_name}_${j} need time was $totaltime million seconds >> timelog.txt
       console_log="/opt/vastai/vaststream/release/samples/common/current_test_round${j}/${json_name}.txt"
-      if [ ! -f "$console_log" ];then
+      if [ ! -f "$console_log" ]; then
                 echo "*******************************************" >>test_result_all.txt
                 echo  the console log of ${json_name}_$j does not exist, please check  >> test_result_all.txt
                 echo "*******************************************" >>test_result_all.txt
