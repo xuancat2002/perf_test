@@ -13,18 +13,18 @@ if [ $FC -lt 1 ]; then
   # cp -r /data/perf_test/ai_dataset/2012img /home/test/dataset/
 fi
 
-DATA=/opt/ai_video_tmp
-TMP=`mount |grep tmpfs|grep $DATA|wc -l`
-if [ $TMP -gt 0 ]; then
-   echo tmpfs on $DATA
-else
-   mkdir -p /opt/ai_video_tmp
-   mount -t tmpfs -o size=100g tempfs $DATA
+#DATA=/opt/ai_video_tmp
+#TMP=`mount |grep tmpfs|grep $DATA|wc -l`
+#if [ $TMP -gt 0 ]; then
+#   echo tmpfs on $DATA
+#else
+#   mkdir -p /home/test/dataset/tmp
+#   mount -t tmpfs -o size=100g tempfs $DATA
    #cp -r /opt/ai_video/deart_data      /opt/ai_video_tmp/   # 2s
    #cp -r /opt/ai_video/deblur_datasets /opt/ai_video_tmp/   # 100s
-   cp -r /data/ai_video/deart_data      /opt/ai_video_tmp/
-   cp -r /data/ai_video/deblur_datasets /opt/ai_video_tmp/
-fi
+   #cp -r /data/ai_video/deart_data      /opt/ai_video_tmp/
+   #cp -r /data/ai_video/deblur_datasets /opt/ai_video_tmp/
+#fi
 
 MOD=`lsmod|grep vast|wc -l`
 if  [ $MOD -lt 1 ]; then

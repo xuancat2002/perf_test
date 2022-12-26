@@ -22,9 +22,17 @@ else
 	#docker pull $docker_image
 	docker load -i $docker_image
 fi
-#host_dataset_path=/opt/ai_video/
-host_dataset_path=/opt/ai_video_tmp/
+host_dataset_path=/opt/ai_video/
+host_tmpfs=/home/test/dataset/tmp_$IDX
+TMP=`mount |grep tmpfs|grep $host_tmpfs |wc -l`
+if [ $TMP -gt 0 ]; then
+   echo tmpfs on $host_tmpfs
+else
+   mkdir -p $host_tmpfs
+   mount -t tmpfs -o size=50g tempfs $host_tmpfs
+fi
 EXEC=/opt/vastai/vaststream/release/samples/common/   # run_de.sh
+EXEC_TMP=/opt/vastai/vaststream/release/samples/tmp/   # run_de.sh
 DATA=/opt/vastai/vaststream/release/samples/datasets
 NIDX=$((IDX+1))
 PCI_N=`lspci|grep accelerators | sed -n ${NIDX}p|awk '{print $1}'`
@@ -38,9 +46,11 @@ docker run --rm -itd --name ai_card${IDX} \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \
   -v $host_dataset_path:$DATA \
+  -v $host_tmpfs:$EXEC_TMP \
   ${AI_ImageID} /bin/bash
 sleep 5
 
-docker cp run_de.sh ai_card$IDX:$EXEC
-docker cp run_de_perf.sh ai_card$IDX:$EXEC
-docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC; ./run_de.sh $LOOP $MODE n" &
+docker exec ai_card$IDX bash -c "cp -r $EXEC/* $EXEC_TMP"
+docker cp run_de.sh ai_card$IDX:$EXEC_TMP
+docker cp run_de_perf.sh ai_card$IDX:$EXEC_TMP
+docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC_TMP; ./run_de.sh $LOOP $MODE n" &
