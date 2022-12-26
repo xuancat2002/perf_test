@@ -2,7 +2,8 @@
 IDX=${1:-0}
 NAME=${2:-ai_video}
 MODE=${3:-deblur}  # deblur/deart/all
-LOOP=${4:-1}
+MEM=${4:-mem}
+LOOP=${5:-1}
 
 AI_ImageID="96f8d416379f"
 DR_NAME=`rpm -qa|grep vastai-pci`
@@ -29,7 +30,7 @@ if [ $TMP -gt 0 ]; then
    echo tmpfs on $host_tmpfs
 else
    mkdir -p $host_tmpfs
-   mount -t tmpfs -o size=50g tempfs $host_tmpfs
+   mount -t tmpfs -o size=20g tempfs $host_tmpfs
 fi
 EXEC=/opt/vastai/vaststream/release/samples/common/   # run_de.sh
 EXEC_TMP=/opt/vastai/vaststream/release/samples/tmp/   # run_de.sh
@@ -48,9 +49,13 @@ docker run --rm -itd --name ai_card${IDX} \
   -v $host_dataset_path:$DATA \
   -v $host_tmpfs:$EXEC_TMP \
   ${AI_ImageID} /bin/bash
+
 sleep 5
 
-docker exec ai_card$IDX bash -c "cp -r $EXEC/* $EXEC_TMP"
-docker cp run_de.sh ai_card$IDX:$EXEC_TMP
-docker cp run_de_perf.sh ai_card$IDX:$EXEC_TMP
+if [ "$MEM" = "mem" ]; then
+  docker exec ai_card$IDX bash -c "cp -r $EXEC/* $EXEC_TMP"
+  EXEC=$EXEC_TMP
+fi
+docker cp run_de.sh ai_card$IDX:$EXEC
+docker cp run_de_perf.sh ai_card$IDX:$EXEC
 docker exec ai_card$IDX bash -c "source /etc/profile; cd $EXEC_TMP; ./run_de.sh $LOOP $MODE n" &

@@ -479,8 +479,10 @@ def modeling_cases():
   #test_and_monitor("192.168.20.209","ai_bench","yolov5")
   #test_and_monitor("192.168.20.209","ai_bench","yolov7")
 
-  test_and_monitor("192.168.20.209","ai_video","deblur_1")
-  test_and_monitor("192.168.20.209","ai_video","deart_1")
+  #test_and_monitor("192.168.20.209","ai_video","deblur_mem_1")
+  #test_and_monitor("192.168.20.209","ai_video","deart_mem_1")
+  test_and_monitor("192.168.20.209","ai_video","deblur_disk_1")
+  test_and_monitor("192.168.20.209","ai_video","deart_disk_1")
 
 #baidu_cases()
 modeling_cases()

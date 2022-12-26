@@ -1,4 +1,4 @@
-CASE=${1:-ai_video.deblur_1}      # test case
+CASE=${1:-ai_video.deblur_mem_1}      # test case
 
 date
 echo "entering benchmark"
