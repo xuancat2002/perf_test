@@ -9,6 +9,45 @@
 import time, subprocess, pandas as pd
 import plotly.graph_objects as go
 
+def plot_fps(folder,card):
+    raw_file="{}/utilize.log".format(folder+'/'+card)
+    cmd="head -1000 {}|grep Time|sort |uniq|wc -l".format(raw_file)
+    n = int(exec_cmd(cmd))
+    #print("plot_fps: {}".format(n))
+    fps_file="{}/fps.log".format(folder+'/'+card)
+    cmd="echo \"die  fps\" > {}".format(fps_file)
+    exec_cmd(cmd)
+    cmd="grep \"^vdsp->ai@ai\" {}|awk '{{if (i%{}==0) {{i=0}}; printf \"die%d  %d\\n\",i,$4; i++}}' >> {}".format(raw_file,n,fps_file)
+    out=exec_cmd(cmd)
+    #print(out)
+    pd.set_option('display.max_columns', 500)
+    pd.set_option('display.max_rows', 500)
+    pd.set_option('display.expand_frame_repr', False)
+    data = pd.read_csv(fps_file, delim_whitespace=True)
+    #print(data)
+    data[["fps"]] = data[["fps"]].apply(pd.to_numeric)
+    all_lines = []
+    for die in range(n):
+        name="die{}".format(die)
+        print(name)
+        data1 = data[(data["die"] == name)].copy()
+        data1.insert(0, 'index', range(1, 1+len(data1)))
+        fps=go.Scatter(x=data1['index'], y=data1['fps'], name=name+'.fps')
+        all_lines.append(fps)
+
+    fig = go.Figure(all_lines)
+    fig.update_layout(
+            title=card + " fps",
+            title_font_size=20,
+            # xaxis_title="Index",
+            # yaxis_title="Performance Trends"
+            # font_family="Courier New",
+            # font_color="blue",
+            # title_font_family="Times New Roman",
+            # title_font_color="red",
+            #legend_title_font_color="green"
+        )
+    fig.write_html(folder+'/'+card+"/fps.html")
 def plot_disk(folder,card):
     file=folder+'/'+card+'/disk.csv'
     output = exec_cmd("head -20 {}|grep -v DEV|grep -v Linux |awk '{{print $3}}'|sort|uniq".format(file))
@@ -320,6 +359,7 @@ def plot_vastai_dmon(folder,card):
 def plot_metrics(path,card):
     #plot_pcie(path,card)
     #plot_mem(path,card)
+    plot_fps(path,card)
     plot_disk(path,card)
     plot_vastai_dmon(path,card)
     plot_pcie_pmt(path,card)
