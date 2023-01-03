@@ -43,6 +43,7 @@ CPUS1=`lscpu|grep node$NODE|awk '{print $4}'`
 echo "$CPUS1" > /sys/fs/cgroup/cpuset/numanode$NODE/cpuset.cpus
 echo "$NODE" > /sys/fs/cgroup/cpuset/numanode$NODE/cpuset.mems
 
+# --security-opt seccomp=/data/tools/default.json \
 docker run --rm -itd --name ai_card${IDX} \
   --cgroup-parent=numanode${NODE} \
   --runtime=vastai -e VASTAI_VISIBLE_DEVICES=${IDX} \

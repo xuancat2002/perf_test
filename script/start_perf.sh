@@ -45,6 +45,7 @@ sar -d 2                         > $DIR/disk.csv 2>/dev/null &
 $BIN/vasmi dmon -d $DEVS -i 0,1  > $DIR/dmon.log 2>/dev/null &
 $BIN/mem  --delay=2    --output=$DIR/mem.csv  > /dev/null 2>&1 &
 $BIN/pcie --only=$PCIE --output=$DIR/pcie.csv > /dev/null 2>&1 &
+$BIN/vaprofiler --utilize        > $DIR/utilize.log 2>&1 &
 #./temp.sh 2 $CARD &
 #sleep 30
 #perf record -F 99 -ag -o $DIR/perf.data -- sleep 30 &
