@@ -29,7 +29,7 @@ def plot_fps(folder,card):
     all_lines = []
     for die in range(n):
         name="die{}".format(die)
-        print(name)
+        #print(name)
         data1 = data[(data["die"] == name)].copy()
         data1.insert(0, 'index', range(1, 1+len(data1)))
         fps=go.Scatter(x=data1['index'], y=data1['fps'], name=name+'.fps')
