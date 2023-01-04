@@ -10,7 +10,7 @@ import time, subprocess, pandas as pd
 import plotly.graph_objects as go
 
 def plot_fps(folder,card):
-    raw_file="{}/utilize.log".format(folder+'/'+card)
+    raw_file="{}/va_util.log".format(folder+'/'+card)
     cmd="head -1000 {}|grep Time|sort |uniq|wc -l".format(raw_file)
     n = int(exec_cmd(cmd))
     #print("plot_fps: {}".format(n))
@@ -238,7 +238,7 @@ def plot_cpu(folder,card,index):
         )
     fig.write_html(folder+'/'+card+"/cpu"+index+".html")
 def plot_vastai_dmon(folder,card):
-    file=folder+'/'+card+'/dmon.log'
+    file=folder+'/'+card+'/va_dmon.log'
     output = exec_cmd("head -100 {}|grep -v Vastai|grep -v '<1/1>'|grep -v '\---' |grep -v 'aic' |awk '{{print $1}}'|sort|uniq".format(file))
     vastai_array=output.split('\n')
     #print(vastai_array)
