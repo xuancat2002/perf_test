@@ -24,7 +24,7 @@ def plot_fps(folder,card):
     pd.set_option('display.max_rows', 500)
     pd.set_option('display.expand_frame_repr', False)
     data = pd.read_csv(fps_file, delim_whitespace=True)
-    #print(data)
+    data=data.iloc[::2]
     data[["fps"]] = data[["fps"]].apply(pd.to_numeric)
     all_lines = []
     for die in range(n):
@@ -519,10 +519,10 @@ def modeling_cases():
   #test_and_monitor("192.168.20.209","ai_bench","yolov5")
   #test_and_monitor("192.168.20.209","ai_bench","yolov7")
 
-  #test_and_monitor("192.168.20.209","ai_video","deblur_mem_1")
-  #test_and_monitor("192.168.20.209","ai_video","deart_mem_1")
-  test_and_monitor("192.168.20.209","ai_video","deblur_disk_1")
-  test_and_monitor("192.168.20.209","ai_video","deart_disk_1")
+  test_and_monitor("192.168.20.209","ai_video","deblur_mem_1")
+  test_and_monitor("192.168.20.209","ai_video","deart_mem_1")
+  #test_and_monitor("192.168.20.209","ai_video","deblur_disk_1")
+  #test_and_monitor("192.168.20.209","ai_video","deart_disk_1")
 
 #baidu_cases()
 modeling_cases()
