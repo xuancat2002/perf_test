@@ -24,13 +24,12 @@ def plot_fps(folder,card):
     pd.set_option('display.max_rows', 500)
     pd.set_option('display.expand_frame_repr', False)
     data = pd.read_csv(fps_file, delim_whitespace=True)
-    data=data.iloc[::2]
     data[["fps"]] = data[["fps"]].apply(pd.to_numeric)
     all_lines = []
     for die in range(n):
         name="die{}".format(die)
-        #print(name)
         data1 = data[(data["die"] == name)].copy()
+        data1=data1.iloc[::2]
         data1.insert(0, 'index', range(1, 1+len(data1)))
         fps=go.Scatter(x=data1['index'], y=data1['fps'], name=name+'.fps')
         all_lines.append(fps)
