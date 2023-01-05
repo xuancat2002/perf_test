@@ -15,8 +15,10 @@ DR_NAME=`rpm -qa|grep vastai-pci`
 ImageID=9f8d0ce57641
 if [ "$DR_NAME" = "vastai-pci-server-adaption-va1-v-0622-hwtype-1-00.22.06.28-1dkms.x86_64" ]; then
   ImageID=2c783a6d863a    # old driver
+  # docker_NPI_v1.4.tar
 elif [ "$DR_NAME" = "vastai-pci-sw-v1-3-vd-hwtype-1-00.22.11.23-1dkms.x86_64" ]; then
   ImageID=9f8d0ce57641    # new driver: sw_v1_3_vd
+  # docker pull 192.168.20.143:443/ffmpeg/ffmpeg4.1.2:202211230842
 fi
 
 host_dataset_path=/home/test/dataset
@@ -71,7 +73,7 @@ else
   # decode:   soft/hard
   # speed:    normal/fast
   # codec:    hevc/h264
-  docker exec video_card$IDX bash -c "sh $DIR/load_video2.sh $CASE $QUALITY $LATENCY $DECODE $SPEED $CODEC"
+  docker exec video_card$IDX bash -c "$DIR/load_video2.sh $CASE $QUALITY $LATENCY $DECODE $SPEED $CODEC"
 fi
 
 #docker exec card$IDX bash -c 'source /etc/profile && sh /opt/vastai/vaststream/samples/script/video_press.sh'

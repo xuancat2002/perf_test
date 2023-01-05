@@ -413,7 +413,7 @@ def stop_perf(host):
 
 workloads={
     #'v_baidu':    ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
-    'v_baidu':     ['loop_docker.sh',       'docker_video.sh','load_video2.sh'],
+    'v_baidu':     ['loop_docker_video.sh',    'docker_video.sh','load_video2.sh'],
     'v_transcode': ['docker_video.sh','load_video.sh'],
     'a_resnet50':  ['loop_docker_resnet50.sh', 'docker_resnet50.sh'],
     'a_bert':      ['loop_docker_bert.sh',     'docker_bert.sh','load_bert.sh'],
@@ -501,6 +501,7 @@ def baidu_cases():
   #test_and_monitor("192.168.20.209","v_baidu","1k_gold_IPPP_hard_normal_h264")
   #test_and_monitor("192.168.20.209","v_baidu","4k_gold_IPPP_hard_normal_h264")
   #test_and_monitor("192.168.20.209","v_baidu", "720_gold_2pass_hard_normal_h264")
+
   #test_and_monitor("192.168.20.209","v_transcode")
   #test_and_monitor("192.168.20.209","a_resnet50")
   #test_and_monitor("192.168.20.209","a_bert")
@@ -523,5 +524,5 @@ def modeling_cases():
   #test_and_monitor("192.168.20.209","ai_video","deblur_disk_1")
   #test_and_monitor("192.168.20.209","ai_video","deart_disk_1")
 
-#baidu_cases()
-modeling_cases()
+baidu_cases()
+#modeling_cases()

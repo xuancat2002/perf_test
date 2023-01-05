@@ -6,7 +6,7 @@ cd $SCRIPTPATH
 CARD=${1:-ai_bench.yolov7}
 DIR="logs/$CARD"
 
-killall vaprofiler vasmi mpstat pcie mem sar
+killall vaprofiler vasmi mpstat pcie mem sar  >/dev/null 2>&1 
 sleep 5
 
 NAME=`echo $CARD | awk -F. '{print $1}'`
@@ -46,7 +46,7 @@ $BIN/vasmi dmon -d $DEVS -i 0,1  > $DIR/va_dmon.log 2>/dev/null &
 $BIN/mem  --delay=2    --output=$DIR/mem.csv  > /dev/null 2>&1 &
 $BIN/pcie --only=$PCIE --output=$DIR/pcie.csv > /dev/null 2>&1 &
 $BIN/vaprofiler --utilize        > $DIR/va_util.log 2>&1 &
-#$BIN/vaprofiler --bandwidth     > $DIR/va_bw.log 2>&1 &
+$BIN/vaprofiler --bandwidth      > $DIR/va_bw.log 2>&1 &
 #./temp.sh 2 $CARD &
 #sleep 30
 #perf record -F 99 -ag -o $DIR/perf.data -- sleep 30 &

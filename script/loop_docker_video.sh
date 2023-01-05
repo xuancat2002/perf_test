@@ -1,6 +1,6 @@
 CASE=${1:-1k}      # test case
 date
-COUNT=`vasmi summary|grep VA1|wc -l`
+COUNT=`lspci|grep acc|wc -l`
 INDEX=$((COUNT-1))
 
 NAME=`echo $CASE | awk -F. '{print $1}'`
