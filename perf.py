@@ -6,7 +6,7 @@
 # git clone --recursive https://github.com/intel/pcm
 # mkdir pcm/build; cd pcm/build; cmake ..; make; make install
 ############################################
-import time, subprocess, pandas as pd
+import argparse, time, subprocess, pandas as pd
 import plotly.graph_objects as go
 
 def plot_fps(folder,card):
@@ -414,11 +414,17 @@ def stop_perf(host):
 workloads={
     #'v_baidu':    ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
     'v_baidu':     ['loop_docker_video.sh',    'docker_video.sh','load_video2.sh'],
-    'v_transcode': ['docker_video.sh','load_video.sh'],
-    'a_resnet50':  ['loop_docker_resnet50.sh', 'docker_resnet50.sh'],
-    'a_bert':      ['loop_docker_bert.sh',     'docker_bert.sh','load_bert.sh'],
     'ai_bench':    ['loop_docker_ai_cnn.sh',   'docker_ai_cnn.sh'],
     'ai_video':    ['loop_docker_ai_video.sh', 'docker_ai_video.sh', 'run_de.sh', 'run_de_perf.sh'],
+    #'v_transcode': ['docker_video.sh','load_video.sh'],
+    #'a_resnet50':  ['loop_docker_resnet50.sh', 'docker_resnet50.sh'],
+    #'a_bert':      ['loop_docker_bert.sh',     'docker_bert.sh','load_bert.sh'],
+}
+parameters={
+    'v_baidu':     ["720_bronze_IPPP_hard_normal_hevc","720_silver_IPPP_hard_normal_h264","720_gold_IPPP_hard_normal_h264","720_gold_2pass_hard_normal_h264",
+                    "1k_gold_2pass_hard_normal_h264",  "1k_gold_IPPP_hard_normal_h264",   "4k_gold_IPPP_hard_normal_h264"],
+    'ai_bench':    ['mobilenet_v1', 'mobilenet_v2', 'resnet', 'retinaface', 'yolov3', 'yolov5', 'yolov7'],
+    'ai_video':    ['deblur_mem_1', 'deart_mem_1', 'deblur_disk_1', 'deart_disk_1'],
 }
 def send_file_remote(user, ip, file, target_path):
     cmd = "scp {} {}@{}:{}".format(file, user, ip, target_path)
@@ -491,13 +497,9 @@ def test_and_monitor(host,name,case):
 
 def baidu_cases():
   test_and_monitor("192.168.20.209","v_baidu","720_bronze_IPPP_hard_normal_hevc")
-  #time.sleep(60)
   #test_and_monitor("192.168.20.209","v_baidu","720_silver_IPPP_hard_normal_h264")
-  #time.sleep(60)
   #test_and_monitor("192.168.20.209","v_baidu","720_gold_IPPP_hard_normal_h264")
-  #time.sleep(60)
   #test_and_monitor("192.168.20.209","v_baidu","1k_gold_2pass_hard_normal_h264")
-  #time.sleep(60)
   #test_and_monitor("192.168.20.209","v_baidu","1k_gold_IPPP_hard_normal_h264")
   #test_and_monitor("192.168.20.209","v_baidu","4k_gold_IPPP_hard_normal_h264")
   #test_and_monitor("192.168.20.209","v_baidu", "720_gold_2pass_hard_normal_h264")
@@ -505,7 +507,6 @@ def baidu_cases():
   #test_and_monitor("192.168.20.209","v_transcode")
   #test_and_monitor("192.168.20.209","a_resnet50")
   #test_and_monitor("192.168.20.209","a_bert")
-  #plot_metrics('/Users/xuan/Desktop/va1v_BD/script/',"va1v_case1")
 
 def modeling_cases():
   #test_and_monitor("192.168.20.209","a_resnet50","5")
@@ -524,5 +525,17 @@ def modeling_cases():
   #test_and_monitor("192.168.20.209","ai_video","deblur_disk_1")
   #test_and_monitor("192.168.20.209","ai_video","deart_disk_1")
 
-baidu_cases()
-#modeling_cases()
+parser = argparse.ArgumentParser(description="VastAI Perf Test")
+parser.add_argument("-d", "--debug", type=bool, default=False, help="Debug mode")
+parser.add_argument("-m", "--mode",  type=str,  default="", help="Workload mode")
+parser.add_argument("-o", "--opts",  type=str,  default="", help="Workload options")
+parser.add_argument("-H", "--host",  type=str,  default="", help="host/ip")
+args=parser.parse_args()
+
+for o1 in args.opts.split(','):
+    if len(args.host)>0 and args.mode in workloads.keys() and o1 in parameters.keys():
+        test_and_monitor(args.host,args.mode,args.opts)
+    else:
+        print("Error in host:{} mode:{} opts:{}".format(args.host,args.mode,o1))
+    #baidu_cases()
+    #modeling_cases()
