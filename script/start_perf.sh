@@ -6,7 +6,7 @@ cd $SCRIPTPATH
 CARD=${1:-ai_bench.yolov7}
 DIR="logs/$CARD"
 
-killall vaprofiler vasmi mpstat pcie mem sar  >/dev/null 2>&1 
+killall vaprofiler vasmi mpstat pcie mem sar AMDuProfPcm >/dev/null 2>&1 
 sleep 5
 
 NAME=`echo $CARD | awk -F. '{print $1}'`
@@ -50,8 +50,8 @@ AMDCPU=`lscpu|grep "^Model name"|grep AMD|wc -l`
 ARMCPU=`lscpu|grep "Architecture"|grep aarch64|wc -l`
 if [ $AMDCPU -gt 0 ]; then
   echo "AMD uProf"
-  $BIN/AMDuProf/bin/AMDuProfPcm -m memory -d 60 -o $DIR/mem.csv
-  $BIN/AMDuProf/bin/AMDuProfPcm -m pcie -d 60 -o $DIR/pcie.csv
+  $BIN/AMDuProf/bin/AMDuProfPcm -m memory -d 3600 -o $DIR/mem.csv &
+  $BIN/AMDuProf/bin/AMDuProfPcm -m pcie   -d 3600 -o $DIR/pcie.csv &
 
 elif [ "$ARMCPU" -gt 0 ]; then
   echo "ARM"

@@ -409,7 +409,7 @@ def start_perf(host,work_dir,case_name,local_dir):
     #write_perf_file(work_folder, perf_file, ['mpstat','mem','pcie'])
     run_script_remote('root', host, work_dir, perf_file, case_name, False)
 def stop_perf(host):
-    exec_cmd("ssh root@{} killall vasmi mpstat pcie mem sar".format(host))
+    exec_cmd("ssh root@{} killall vasmi mpstat pcie mem sar AMDuProfPcm".format(host))
 
 workloads={
     #'v_baidu':    ['loop_docker_numa1.sh', 'docker_video.sh','load_video2.sh'],
