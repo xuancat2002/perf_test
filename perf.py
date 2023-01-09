@@ -403,8 +403,8 @@ pcm-pcie     -B  -csv={DIR}/pcie.csv > /dev/null 2>&1 &""".format(DIR=folder)
         f.write(content)
 def start_perf(host,work_dir,case_name,local_dir):
     #result_folder= "/home/test"
-    perf_file="start_perf.sh"
     #work_folder=work_dir+'/'+sub_folder
+    perf_file="start_perf.sh"
     send_file_remote('root', host, local_dir+perf_file, work_dir)
     #write_perf_file(work_folder, perf_file, ['mpstat','mem','pcie'])
     run_script_remote('root', host, work_dir, perf_file, case_name, False)
@@ -426,6 +426,9 @@ parameters={
     'ai_bench':    ['mobilenet_v1', 'mobilenet_v2', 'resnet', 'retinaface', 'yolov3', 'yolov5', 'yolov7'],
     'ai_video':    ['deblur_mem_1', 'deart_mem_1', 'deblur_disk_1', 'deart_disk_1'],
 }
+def create_folder_remote(user, host, work_dir):
+    cmd="ssh {}@{} mkdir -p {}".format(user,host,work_dir)
+    out=exec_cmd(cmd)
 def send_file_remote(user, ip, file, target_path):
     cmd = "scp {} {}@{}:{}".format(file, user, ip, target_path)
     # cmd="scp /Users/xuan/Desktop/VE1S/docker_ai.sh root@192.168.20.48:/home/test/test1"
@@ -486,6 +489,7 @@ def test_and_monitor(host,name,case):
     path1="/home/test/dataset/"  #remote
     folder = 'script/'  # local
     full="{}.{}".format(name,case)
+    create_folder_remote('root', host, path1)
     start_perf(host,path1,full,folder)
     start_dockers(host,name,path1,folder,case)
     time.sleep(5)
@@ -533,9 +537,11 @@ parser.add_argument("-H", "--host",  type=str,  default="", help="host/ip")
 args=parser.parse_args()
 
 for o1 in args.opts.split(','):
-    if len(args.host)>0 and args.mode in workloads.keys() and o1 in parameters.keys():
+    if len(args.host)>0 and args.mode in workloads.keys() and o1 in parameters[args.mode]:
         test_and_monitor(args.host,args.mode,args.opts)
     else:
         print("Error in host:{} mode:{} opts:{}".format(args.host,args.mode,o1))
+        #print("workloads:", workloads.keys())
+        #print("parameters.keys", parameters[o1])
     #baidu_cases()
     #modeling_cases()
