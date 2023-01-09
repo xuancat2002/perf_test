@@ -88,42 +88,41 @@ def plot_disk(folder,card):
             #legend_title_font_color="green"
         )
     fig.write_html(folder+'/'+card+"/disk.html")
-def plot_mem(folder,card):
-    data = pd.read_csv(folder+'/'+card+'/mem.csv', header=[0,1])
+def plot_mem_amd(folder,card):
+    file=folder+'/'+card+'/amd_mem.csv'
+    output = exec_cmd("head -100 {} |grep -n 'Profile Time:'".format(file))
+    line_number=int(output.split(':')[0])-7
+    data = pd.read_csv(file, header=[line_number,line_number+1])
     data.columns = data.columns.map(''.join)
-    pd.set_option('display.max_columns', 500)
-    pd.set_option('display.max_rows', 500)
-    pd.set_option('display.expand_frame_repr', False)
+    for c in data.columns:
+        if "Mem Ch" in c or "Total Mem Bw (GB/s)" in c:
+            data.drop(c, inplace=True, axis=1)
+    data = data.iloc[:, :-1]
+    col = ['S0Read', 'S0Write']
+    if len(data.columns)==4:
+        col=['mem_read0', 'mem_write0', 'mem_read1', 'mem_write1']
+    elif len(data.columns)==8:
+        col=['mem_read0', 'mem_write0', 'mem_read1', 'mem_write1', 'mem_read2', 'mem_write2', 'mem_read3', 'mem_write3']
+    data.columns=col
     data.insert(0, 'index', range(1, 1 + len(data)))
-    line1 = go.Scatter(x=data['index'], y=data['SKT0Mem Read (MB/s)'], name='mem_read0')
-    line2 = go.Scatter(x=data['index'], y=data['SKT0Mem Write (MB/s)'], name='mem_write0')
-    line3 = go.Scatter(x=data['index'], y=data['SKT1Mem Read (MB/s)'], name='mem_read1')
-    line4 = go.Scatter(x=data['index'], y=data['SKT1Mem Write (MB/s)'], name='mem_write1')
-    fig = go.Figure([line1,line2,line3,line4])
+    all_lines=[]
+    for c in col:
+        line = go.Scatter(x=data['index'], y=data[c], name=c)
+        all_lines.append(line)
+    fig = go.Figure(all_lines)
     fig.update_layout(
         title=card+" memory",
-        # xaxis_title="Index",
-        # yaxis_title="Performance Trends"
-        # font_family="Courier New",
-        # font_color="blue",
-        # title_font_family="Times New Roman",
-        # title_font_color="red",
         title_font_size=20,
-        #legend_title_font_color="green"
     )
     #fig.show()
-    fig.write_html(folder+'/'+card+"/mem.html")
+    fig.write_html(folder+'/'+card+"/amd_mem.html")
 def plot_mem_pmt(folder,card):
     data = pd.read_csv(folder+'/'+card+'/mem.csv')
     #data.columns = data.columns.map(''.join)
-    pd.set_option('display.max_columns', 500)
-    pd.set_option('display.max_rows', 500)
-    pd.set_option('display.expand_frame_repr', False)
     data.insert(0, 'index', range(1, 1 + len(data)))
     data.drop(index=0,inplace=True)
     #data = data.iloc[1:, :]
     #S0Read,S0Write,S1Read,S1Write       (MB/s)
-
     line1 = go.Scatter(x=data['index'], y=data['S0Read'], name='mem_read0')
     line2 = go.Scatter(x=data['index'], y=data['S0Write'], name='mem_write0')
     line3 = go.Scatter(x=data['index'], y=data['S1Read'], name='mem_read1')
@@ -131,14 +130,7 @@ def plot_mem_pmt(folder,card):
     fig = go.Figure([line1,line2,line3,line4])
     fig.update_layout(
         title=card+" memory",
-        # xaxis_title="Index",
-        # yaxis_title="Performance Trends"
-        # font_family="Courier New",
-        # font_color="blue",
-        # title_font_family="Times New Roman",
-        # title_font_color="red",
         title_font_size=20,
-        #legend_title_font_color="green"
     )
     #fig.show()
     fig.write_html(folder+'/'+card+"/mem.html")
@@ -163,14 +155,7 @@ def plot_pcie(folder,card):
     fig = go.Figure([line1,line2,line3,line4])
     fig.update_layout(
         title=card + " pcie",
-        # xaxis_title="Index",
-        # yaxis_title="Performance Trends"
-        # font_family="Courier New",
-        # font_color="blue",
-        # title_font_family="Times New Roman",
-        # title_font_color="red",
         title_font_size=20,
-        #legend_title_font_color="green"
     )
     #fig.show()
     fig.write_html(folder+'/'+card+"/pcie.html")
@@ -200,14 +185,7 @@ def plot_pcie_pmt(folder,card):
     fig = go.Figure(all_lines)
     fig.update_layout(
         title = str(len(pcie_array)) + " cards pcie bandwidth",
-        # xaxis_title="Index",
-        # yaxis_title="Performance Trends"
-        # font_family="Courier New",
-        # font_color="blue",
-        # title_font_family="Times New Roman",
-        # title_font_color="red",
         title_font_size=20,
-        # legend_title_font_color="green"
     )
     #fig.show()
     fig.write_html(folder + '/' + card + "/pcie.html")
@@ -294,14 +272,7 @@ def plot_vastai_dmon(folder,card):
     fig_enc = go.Figure(enc_all_lines)
     fig_pwr.update_layout(
         title=str(len(vastai_array)) + " vastai pwr(W)",
-        # xaxis_title="Index",
-        # yaxis_title="Performance Trends"
-        # font_family="Courier New",
-        # font_color="blue",
-        # title_font_family="Times New Roman",
-        # title_font_color="red",
         title_font_size=20,
-        # legend_title_font_color="green"
     )
     fig_temp.update_layout(
         title=str(len(vastai_array)) + " vastai temp(C)",
@@ -362,7 +333,10 @@ def plot_metrics(path,card):
     plot_disk(path,card)
     plot_vastai_dmon(path,card)
     plot_pcie_pmt(path,card)
-    plot_mem_pmt(path,card)
+    if os.path.isfile(path+'/'+card+'/amd_mem.csv'):
+        plot_mem_amd(path,card)
+    elif os.path.isfile(path+'/'+card+'/mem.csv'):
+        plot_mem_pmt(path,card)
     plot_cpu(path,card,'all')
     #plot_cpu(path,card,'0')
     #exec_cmd("mv perf.log results/{}/".format(card))
@@ -498,36 +472,6 @@ def test_and_monitor(host,name,case):
     download_results('root', host, path1+'/logs/'+full, "results")
     print("plot charts")
     plot_metrics("results",full)
-
-def baidu_cases():
-  test_and_monitor("192.168.20.209","v_baidu","720_bronze_IPPP_hard_normal_hevc")
-  #test_and_monitor("192.168.20.209","v_baidu","720_silver_IPPP_hard_normal_h264")
-  #test_and_monitor("192.168.20.209","v_baidu","720_gold_IPPP_hard_normal_h264")
-  #test_and_monitor("192.168.20.209","v_baidu","1k_gold_2pass_hard_normal_h264")
-  #test_and_monitor("192.168.20.209","v_baidu","1k_gold_IPPP_hard_normal_h264")
-  #test_and_monitor("192.168.20.209","v_baidu","4k_gold_IPPP_hard_normal_h264")
-  #test_and_monitor("192.168.20.209","v_baidu", "720_gold_2pass_hard_normal_h264")
-
-  #test_and_monitor("192.168.20.209","v_transcode")
-  #test_and_monitor("192.168.20.209","a_resnet50")
-  #test_and_monitor("192.168.20.209","a_bert")
-
-def modeling_cases():
-  #test_and_monitor("192.168.20.209","a_resnet50","5")
-  #test_and_monitor("192.168.20.209","a_bert","5")
-
-  #test_and_monitor("192.168.20.209","ai_bench","mobilenet_v1")
-  #test_and_monitor("192.168.20.209","ai_bench","mobilenet_v2")
-  #test_and_monitor("192.168.20.209","ai_bench","resnet")
-  #test_and_monitor("192.168.20.209","ai_bench","retinaface")
-  #test_and_monitor("192.168.20.209","ai_bench","yolov3")
-  #test_and_monitor("192.168.20.209","ai_bench","yolov5")
-  #test_and_monitor("192.168.20.209","ai_bench","yolov7")
-
-  test_and_monitor("192.168.20.209","ai_video","deblur_mem_1")
-  test_and_monitor("192.168.20.209","ai_video","deart_mem_1")
-  #test_and_monitor("192.168.20.209","ai_video","deblur_disk_1")
-  #test_and_monitor("192.168.20.209","ai_video","deart_disk_1")
 
 parser = argparse.ArgumentParser(description="VastAI Perf Test")
 parser.add_argument("-d", "--debug", type=bool, default=False, help="Debug mode")
