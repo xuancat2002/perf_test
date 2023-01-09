@@ -43,14 +43,26 @@ DEVS=`echo $(seq 0 $CNT1)|tr ' ' ','`
 mpstat -P ALL 2                  > $DIR/cpu.csv  2>/dev/null &
 sar -d 2                         > $DIR/disk.csv 2>/dev/null &
 $BIN/vasmi dmon -d $DEVS -i 0,1  > $DIR/va_dmon.log 2>/dev/null &
-$BIN/mem  --delay=2    --output=$DIR/mem.csv  > /dev/null 2>&1 &
-$BIN/pcie --only=$PCIE --output=$DIR/pcie.csv > /dev/null 2>&1 &
 $BIN/vaprofiler --utilize        > $DIR/va_util.log 2>&1 &
-$BIN/vaprofiler --bandwidth      > $DIR/va_bw.log 2>&1 &
+#$BIN/vaprofiler --bandwidth     > $DIR/va_bw.log 2>&1 &
+
+AMDCPU=`lscpu|grep "^Model name"|grep AMD|wc -l`
+ARMCPU=`lscpu|grep "Architecture"|grep aarch64|wc -l`
+if [ $AMDCPU -gt 0 ]; then
+  echo "AMD uProf"
+  $BIN/AMDuProf/bin/AMDuProfPcm -m memory -d 60 -o $DIR/mem.csv
+  $BIN/AMDuProf/bin/AMDuProfPcm -m pcie -d 60 -o $DIR/pcie.csv
+
+elif [ "$ARMCPU" -gt 0 ]; then
+  echo "ARM"
+else
+  $BIN/mem  --delay=2    --output=$DIR/mem.csv  > /dev/null 2>&1 &
+  $BIN/pcie --only=$PCIE --output=$DIR/pcie.csv > /dev/null 2>&1 &
+fi
+
 #./temp.sh 2 $CARD &
 #sleep 30
 #perf record -F 99 -ag -o $DIR/perf.data -- sleep 30 &
-
 # vaprofiler --video 5
 # vaprofiler --bandwidth
 # vaprofiler --bandwidth > $DIR/bw.csv 2>&1 &
