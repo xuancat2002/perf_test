@@ -50,11 +50,11 @@ AMDCPU=`lscpu|grep "^Model name"|grep AMD|wc -l`
 ARMCPU=`lscpu|grep "Architecture"|grep aarch64|wc -l`
 if [ $AMDCPU -gt 0 ]; then
   echo "AMD uProf"
-  $BIN/AMDuProf/bin/AMDuProfPcm -m memory -d 3600 -o $DIR/mem.csv &
-  $BIN/AMDuProf/bin/AMDuProfPcm -m pcie   -d 3600 -o $DIR/pcie.csv &
+  $BIN/AMDuProf/bin/AMDuProfPcm -m memory -d 3600 -a -o $DIR/amd_mem.csv  > /dev/null 2>&1 &
+  $BIN/AMDuProf/bin/AMDuProfPcm -m pcie   -d 3600 -a -o $DIR/amd_pcie.csv > /dev/null 2>&1 &
 
 elif [ "$ARMCPU" -gt 0 ]; then
-  echo "ARM"
+  echo "no mem/pcie tools for ARM"
 else
   $BIN/mem  --delay=2    --output=$DIR/mem.csv  > /dev/null 2>&1 &
   $BIN/pcie --only=$PCIE --output=$DIR/pcie.csv > /dev/null 2>&1 &
